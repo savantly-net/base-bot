@@ -8,12 +8,19 @@ You can run the docker container with mounted volumes to modify the default beha
 ## TLDR;
 Run in docker (requires your OPENAI_API_KEY as an env variable)  
 ```shell
-docker run -p 9000:9000 -e OPENAI_API_KEY=${OPENAI_API_KEY} savantly/nexus-bot
+docker run -p 9000:9000 -e OPENAI_API_KEY=${OPENAI_API_KEY} savantly/base-bot
 ```
 
 ![screenshot](./docs/screenshot.png)
 
-## ✅ Running locally
+## Customizing
+The easiest way to get started is to copy the `docker-compose.yml` to your project folder and create a data directory for your own domain.  
+You can get starter data here - [./data](./data)  
+The do `docker compose up` .
+
+Override other settings as needed.  
+
+## ✅ Developing
 1. Install dependencies: `pip install -r requirements.txt`
 1. Run `ingest.sh` to ingest LangChain docs data into the vectorstore (only needs to be done once).
    1. You can use other [Document Loaders](https://langchain.readthedocs.io/en/latest/modules/document_loaders.html) to load your own data into the vectorstore.
@@ -52,7 +59,8 @@ Question-Answering has the following steps
 - [x] Parameterize prompts and ingestion settings
 - [x] Enable loading docs from a folder
 - [x] Create Docker image
-- [ ] Create parameters and code to substitute the pickled vector store for Pinecone
+- [x] Create docker-compose for rapid testing
+- [ ] Create parameters and code to substitute the pickled vector store for Pinecone or another implementation
 - [ ] Create Helm chart
 - [ ] Create web-component for dropping the chat on any web page 
 - [ ] Parameterize additional chain settings??
