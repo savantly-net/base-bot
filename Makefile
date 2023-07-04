@@ -1,5 +1,5 @@
 IMAGE_REPO ?= docker.io/savantly
-IMAGE_NAME ?= nexus-bot
+IMAGE_NAME ?= base-bot
 IMAGE_TAG ?= latest
 
 FINAL_IMAGE_NAME := $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
