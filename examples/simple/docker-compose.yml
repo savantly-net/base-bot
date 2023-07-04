@@ -1,0 +1,11 @@
+services:
+  simple-base-bot:
+    image: savantly/base-bot:latest
+    ports:
+      - 9000:9000
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    volumes:
+      - ./data/docs:/app/data/docs
+      - ./data/stores:/app/data/stores
+
