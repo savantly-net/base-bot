@@ -22,5 +22,5 @@ jobs:
           cache: 'pip'
 
       - run: pip install -r requirements.txt
-
-      - run: pip test
+      - run: pip check
+      - run: pip freeze > requirements.txt
