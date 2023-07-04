@@ -1,4 +1,6 @@
 
+import logging
+import os
 from dynaconf import Dynaconf
 
 settings = Dynaconf(
@@ -26,3 +28,7 @@ VECTORSTORE_CREATE_IF_MISSING = settings.VECTORSTORE_CREATE_IF_MISSING
 
 INGEST_CHUNK_SIZE = settings.INGEST_CHUNK_SIZE
 INGEST_CHUNK_OVERLAP = settings.INGEST_CHUNK_OVERLAP
+
+logging.basicConfig(level=settings.LOGGING_LEVEL)
+
+os.environ["LANGCHAIN_TRACING"] = str(settings.TRACING)
