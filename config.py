@@ -1,0 +1,27 @@
+
+from dynaconf import Dynaconf
+
+settings = Dynaconf(
+    envvar_prefix="SAVANTLY_CHAT",
+    settings_files=['settings.py', '.secrets.py'],
+)
+
+# `envvar_prefix` = export envvars with `export SAVANTLY_CHAT_FOO=bar`.
+# `settings_files` = Load these files in the order.
+
+# Provide strongly-typed access to settings.
+# See https://www.dynaconf.com/ for more information.
+
+# read the contents of the file into a variable
+REPHRASE_PROMPT: str = ''
+with open(settings.REPHRASE_PROMPT_PATH, 'r') as file :
+    REPHRASE_PROMPT = file.read()
+
+QA_PROMPT: str = ''
+with open(settings.QA_PROMPT_PATH, 'r') as file :
+    QA_PROMPT = file.read()
+
+VECTORSTORE_PATH = settings.VECTORSTORE_PATH
+
+INGEST_CHUNK_SIZE = settings.INGEST_CHUNK_SIZE
+INGEST_CHUNK_OVERLAP = settings.INGEST_CHUNK_OVERLAP
