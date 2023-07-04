@@ -23,7 +23,12 @@ vectorstore_path = config.VECTORSTORE_PATH
 async def startup_event():
     logging.info("loading vectorstore")
     if not Path(vectorstore_path).exists():
-        raise ValueError("vectorstore.pkl does not exist, please run ingest.py first")
+        if config.VECTORSTORE_CREATE_IF_MISSING:
+            logging.info(f"{vectorstore_path} does not exist, creating from docs")
+            from ingest import ingest_docs
+            ingest_docs()
+        else:
+            raise ValueError(f"{vectorstore_path} does not exist, please run ingest.py first")
     with open(vectorstore_path, "rb") as f:
         global vectorstore
         vectorstore = pickle.load(f)
