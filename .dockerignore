@@ -1,1 +1,8 @@
 .secrets*
+
+data
+
+!data/docs/text/default.txt
+!data/prompts/condense_question.txt
+!data/prompts/question_answer.txt
+!data/stores/.gitkeep
