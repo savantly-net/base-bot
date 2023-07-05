@@ -8,7 +8,7 @@ from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates
 from langchain.vectorstores import VectorStore
 
-from callback import QuestionGenCallbackHandler, StreamingLLMCallbackHandler
+from callback import RephrasedInputGenerationCallbackHandler, StreamingLLMCallbackHandler
 from query_data import get_chain
 from schemas import ChatResponse
 
@@ -42,10 +42,10 @@ async def get(request: Request):
 @app.websocket("/chat")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    question_handler = QuestionGenCallbackHandler(websocket)
+    rephrasing_handler = RephrasedInputGenerationCallbackHandler(websocket)
     stream_handler = StreamingLLMCallbackHandler(websocket)
     chat_history = []
-    qa_chain = get_chain(vectorstore, question_handler, stream_handler)
+    qa_chain = get_chain(vectorstore, rephrasing_handler, stream_handler)
     # Use the below line instead of the above line to enable tracing
     # Ensure `langchain-server` is running
     # qa_chain = get_chain(vectorstore, question_handler, stream_handler, tracing=True)
@@ -53,8 +53,9 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         try:
             # Receive and send back the client message
-            question = await websocket.receive_text()
-            resp = ChatResponse(sender="you", message=question, type="stream")
+            user_input_text = await websocket.receive_text()
+            logging.info(f"received message: {user_input_text}")
+            resp = ChatResponse(sender="you", message=user_input_text, type="stream")
             await websocket.send_json(resp.dict())
 
             # Construct a response
@@ -62,9 +63,9 @@ async def websocket_endpoint(websocket: WebSocket):
             await websocket.send_json(start_resp.dict())
 
             result = await qa_chain.acall(
-                {"question": question, "chat_history": chat_history}
+                {"question": user_input_text, "chat_history": chat_history}
             )
-            chat_history.append((question, result["answer"]))
+            chat_history.append((user_input_text, result["answer"]))
 
             end_resp = ChatResponse(sender="bot", message="", type="end")
             await websocket.send_json(end_resp.dict())
