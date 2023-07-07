@@ -15,4 +15,4 @@ COPY . /app
 ENV PORT=9000
 ENV HOST=0.0.0.0
 
-CMD [ "sh", "-c", "uvicorn main:app --reload --port ${PORT} --host ${HOST}" ]
+CMD [ "sh", "-c", "uvicorn base_bot.main:app --reload --port ${PORT} --host ${HOST}" ]

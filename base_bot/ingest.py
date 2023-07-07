@@ -1,11 +1,10 @@
 import pickle
 
+from . import config
+from langchain.document_loaders import DirectoryLoader
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores.faiss import FAISS
-
-from langchain.document_loaders import DirectoryLoader
-import config
 
 
 def ingest_docs():
@@ -23,7 +22,11 @@ def ingest_docs():
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
     )
-    print("Splitting documents into chunks. Chunk size: {}, overlap: {}".format(chunk_size, chunk_overlap))
+    print(
+        "Splitting documents into chunks. Chunk size: {}, overlap: {}".format(
+            chunk_size, chunk_overlap
+        )
+    )
     documents = text_splitter.split_documents(documents)
 
     # use OpenAIEmbeddings to embed documents - requires OPENAI_API_KEY set in ENV

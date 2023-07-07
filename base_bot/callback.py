@@ -3,8 +3,7 @@ import logging
 from typing import Any, Dict, List
 
 from langchain.callbacks.base import AsyncCallbackHandler
-
-from schemas import ChatResponse
+from base_bot.schemas import ChatResponse
 
 
 class StreamingLLMCallbackHandler(AsyncCallbackHandler):
@@ -29,7 +28,5 @@ class RephrasedInputGenerationCallbackHandler(AsyncCallbackHandler):
     ) -> None:
         logging.info("rephrasing input from prompts %s", prompts)
         """Run when LLM starts running."""
-        resp = ChatResponse(
-            sender="bot", message="Rephrasing input...", type="info"
-        )
+        resp = ChatResponse(sender="bot", message="Rephrasing input...", type="info")
         await self.websocket.send_json(resp.dict())

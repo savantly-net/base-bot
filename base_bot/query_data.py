@@ -2,7 +2,7 @@
 from langchain.callbacks.base import BaseCallbackManager
 from langchain.callbacks.tracers import LangChainTracer
 from langchain.chains import ConversationalRetrievalChain
-from prompts import (REPHRASE_PROMPT, QA_PROMPT)
+from base_bot.prompts import (REPHRASE_PROMPT, QA_PROMPT)
 from langchain.chains.llm import LLMChain
 from langchain.chains.question_answering import load_qa_chain
 from langchain.llms import OpenAI
