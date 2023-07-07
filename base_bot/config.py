@@ -1,11 +1,11 @@
-
 import logging
 import os
+
 from dynaconf import Dynaconf
 
 settings = Dynaconf(
     envvar_prefix="SAVANTLY_CHAT",
-    settings_files=['settings.py', '.secrets.py'],
+    settings_files=["settings.py", ".secrets.py"],
 )
 
 # `envvar_prefix` = export envvars with `export SAVANTLY_CHAT_FOO=bar`.
@@ -15,12 +15,12 @@ settings = Dynaconf(
 # See https://www.dynaconf.com/ for more information.
 
 # read the contents of the file into a variable
-REPHRASE_PROMPT: str = ''
-with open(settings.REPHRASE_PROMPT_PATH, 'r') as file :
+REPHRASE_PROMPT: str = ""
+with open(settings.REPHRASE_PROMPT_PATH, "r") as file:
     REPHRASE_PROMPT = file.read()
 
-QA_PROMPT: str = ''
-with open(settings.QA_PROMPT_PATH, 'r') as file :
+QA_PROMPT: str = ""
+with open(settings.QA_PROMPT_PATH, "r") as file:
     QA_PROMPT = file.read()
 
 VECTORSTORE_PATH = settings.VECTORSTORE_PATH
@@ -32,3 +32,5 @@ INGEST_CHUNK_OVERLAP = settings.INGEST_CHUNK_OVERLAP
 logging.basicConfig(level=settings.LOGGING_LEVEL)
 
 os.environ["LANGCHAIN_TRACING"] = str(settings.TRACING)
+
+TEMPLATES_DIR = settings.TEMPLATES_DIR

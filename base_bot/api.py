@@ -1,51 +1,33 @@
-"""Main entrypoint for the app."""
 import logging
-import pickle
-from pathlib import Path
-from typing import Optional
 
-from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
+from . import config
+from .callback import (
+    RephrasedInputGenerationCallbackHandler,
+    StreamingLLMCallbackHandler,
+)
+from fastapi import APIRouter, Request, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates
-from langchain.vectorstores import VectorStore
+from .query_data import get_chain
+from .schemas import ChatResponse
 
-from callback import RephrasedInputGenerationCallbackHandler, StreamingLLMCallbackHandler
-from query_data import get_chain
-from schemas import ChatResponse
+from .vectorstore import get_vectorstore
 
-import config
-
-app = FastAPI()
-templates = Jinja2Templates(directory="templates")
-vectorstore: Optional[VectorStore] = None
-vectorstore_path = config.VECTORSTORE_PATH
-
-@app.on_event("startup")
-async def startup_event():
-    logging.info("loading vectorstore")
-    if not Path(vectorstore_path).exists():
-        if config.VECTORSTORE_CREATE_IF_MISSING:
-            logging.info(f"{vectorstore_path} does not exist, creating from docs")
-            from ingest import ingest_docs
-            ingest_docs()
-        else:
-            raise ValueError(f"{vectorstore_path} does not exist, please run ingest.py first")
-    with open(vectorstore_path, "rb") as f:
-        global vectorstore
-        vectorstore = pickle.load(f)
+templates = Jinja2Templates(directory=config.TEMPLATES_DIR)
+router = APIRouter()
 
 
-@app.get("/")
+@router.get("/")
 async def get(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-@app.websocket("/chat")
+@router.websocket("/chat")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     rephrasing_handler = RephrasedInputGenerationCallbackHandler(websocket)
     stream_handler = StreamingLLMCallbackHandler(websocket)
     chat_history = []
-    qa_chain = get_chain(vectorstore, rephrasing_handler, stream_handler)
+    qa_chain = get_chain(get_vectorstore(), rephrasing_handler, stream_handler)
     # Use the below line instead of the above line to enable tracing
     # Ensure `langchain-server` is running
     # qa_chain = get_chain(vectorstore, question_handler, stream_handler, tracing=True)
@@ -80,9 +62,3 @@ async def websocket_endpoint(websocket: WebSocket):
                 type="error",
             )
             await websocket.send_json(resp.dict())
-
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run(app, host="0.0.0.0", port=9000)

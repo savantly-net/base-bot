@@ -1,6 +1,6 @@
 # flake8: noqa
 from langchain.prompts.prompt import PromptTemplate
-import config
+from . import config
 
 REPHRASE_PROMPT = PromptTemplate.from_template(config.REPHRASE_PROMPT)
 
