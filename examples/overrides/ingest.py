@@ -1,17 +1,32 @@
 import pickle
 
+from langchain.document_loaders import GoogleDriveLoader, UnstructuredFileIOLoader
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores.faiss import FAISS
 
 
+GDRIVE_FOLDER_ID = "<use your folder id here>"
+
 INGEST_CHUNK_SIZE = 1000
 INGEST_CHUNK_OVERLAP = 200
-VECTORSTORE_PATH = "data/stores/vectorstore.pkl"
+VECTORSTORE_PATH = './data/stores/vectorstore.pkl'
 
 
-def ingest_docs(document_loader, vectorstore_path=VECTORSTORE_PATH):
-    documents = document_loader.load()
+def ingest_docs():
+
+    loader = GoogleDriveLoader(
+        credentials_path='credentials.json',
+        token_path='token.json',
+        folder_id=GDRIVE_FOLDER_ID,
+        #file_types=["document", "sheet"],
+        #file_loader_cls=UnstructuredFileIOLoader,
+        # Optional: configure whether to recursively fetch files from subfolders. Defaults to False.
+        recursive=False,
+        file_loader_kwargs={"mode": "elements"},
+    )
+
+    documents = loader.load()
 
     print("Loaded {} documents".format(len(documents)))
 
@@ -36,11 +51,11 @@ def ingest_docs(document_loader, vectorstore_path=VECTORSTORE_PATH):
     vectorstore = FAISS.from_documents(documents, embeddings)
 
     # Save vectorstore
+    vectorstore_path = VECTORSTORE_PATH
     print("Saving vectorstore to", vectorstore_path)
     with open(vectorstore_path, "wb") as f:
         pickle.dump(vectorstore, f)
 
 
 if __name__ == "__main__":
-    from document_loader import get_document_loader
-    ingest_docs(document_loader=get_document_loader())
+    ingest_docs()

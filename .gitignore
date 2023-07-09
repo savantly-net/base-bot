@@ -141,4 +141,6 @@ langchain.readthedocs.io/
 # Ignore dynaconf secret files
 .secrets.*
 
+token.json
+
 /data

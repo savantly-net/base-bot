@@ -5,7 +5,7 @@ from dynaconf import Dynaconf
 
 settings = Dynaconf(
     envvar_prefix="SAVANTLY_CHAT",
-    settings_files=["settings.py", ".secrets.py"],
+    settings_files=["base_bot/default-settings.py", "settings.py", ".secrets.py"],
 )
 
 # `envvar_prefix` = export envvars with `export SAVANTLY_CHAT_FOO=bar`.
@@ -13,6 +13,8 @@ settings = Dynaconf(
 
 # Provide strongly-typed access to settings.
 # See https://www.dynaconf.com/ for more information.
+
+DOCS_PATH = settings.DOCS_PATH
 
 # read the contents of the file into a variable
 REPHRASE_PROMPT: str = ""
