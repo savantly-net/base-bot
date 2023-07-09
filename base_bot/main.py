@@ -1,6 +1,6 @@
 """Main entrypoint for the app."""
 
-from . import vectorstore
+from .vectorstore import get_vectorstore
 from .api import router
 from fastapi import FastAPI
 
@@ -16,7 +16,7 @@ app = create_app()
 
 @app.on_event("startup")
 async def startup_event():
-    vectorstore.get_vectorstore()
+    get_vectorstore()
 
 
 if __name__ == "__main__":

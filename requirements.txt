@@ -14,3 +14,5 @@ libmagic
 tiktoken
 dynaconf
 pypdf
+numpy==1.24
+wrapt>=1.14,<1.15

@@ -6,8 +6,7 @@ from typing import Optional
 from langchain.vectorstores import VectorStore
 
 from . import config
-from .document_loader import get_document_loader
-from .ingest import ingest_docs
+from ..ingest import ingest_docs
 
 vectorstore: Optional[VectorStore] = None
 vectorstore_path = config.VECTORSTORE_PATH
@@ -19,10 +18,7 @@ def _load_vectorstore() -> VectorStore:
         if config.VECTORSTORE_CREATE_IF_MISSING:
             logging.info(f"{vectorstore_path} does not exist, creating from docs")
 
-            ingest_docs(
-                document_loader=get_document_loader(config.DOCS_PATH),
-                vectorstore_path=vectorstore_path,
-            )
+            ingest_docs()
         else:
             raise ValueError(
                 f"{vectorstore_path} does not exist, please run ingest.py first"
