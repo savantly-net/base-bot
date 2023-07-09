@@ -51,7 +51,13 @@
         }
     </style>
     <script>
-        var endpoint = "ws://" + window.location.host + "/chat";
+
+        function getWsEndpoint() {
+            var protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+            var endpoint = protocol + "//" + window.location.host + "/chat";
+            return endpoint;
+        }
+        var endpoint = getWsEndpoint();
         var ws = new WebSocket(endpoint);
         // Receive message from server word by word. Display the words as they are received.
         ws.onmessage = function (event) {
