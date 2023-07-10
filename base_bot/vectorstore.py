@@ -14,7 +14,7 @@ vectorstore_path = config.VECTORSTORE_PATH
 
 
 def _load_vectorstore() -> VectorStore:
-    logging.info("loading vectorstore")
+    logging.info("loading pickled vectorstore...")
     if not Path(vectorstore_path).exists():
         if config.VECTORSTORE_CREATE_IF_MISSING:
             logging.info(f"{vectorstore_path} does not exist, creating from docs")
