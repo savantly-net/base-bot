@@ -34,6 +34,45 @@ Add a `.secrets.py` file to hold your secret data.
 
 Both of these files can be mounted in place if you're using the pre-built Docker image.  
 
+### Environment Variables
+If you're running the docker image, you can easily customize the configurations by using environment variables.  
+
+Prefix the configuration items with `SAVANTLY_CHAT_` to pass env vars directly to the base-bot configuration.  
+
+For example - 
+
+```shell
+SAVANTLY_CHAT_UI_PAGE_TITLE="My Bot"
+```
+
+### LLM Configs
+Use these parameters to modify the LLM configuration  
+
+```python
+LLM_REPRHASING_MODEL = "gpt-3.5-turbo"
+LLM_REPHRASING_TEMPERATURE = 0.0
+LLM_REPHRASING_VERBOSE = True
+LLM_STREAMING_MODEL = "gpt-3.5-turbo"
+LLM_STREAMING_TEMPERATURE = 0.0
+LLM_STREAMING_VERBOSE = True
+```
+
+### White labeling 
+Use these settings to customize the branding -  
+
+```python
+UI_PAGE_TITLE = "Savantly Base Bot"
+UI_PAGE_DESCRIPTION = "Savantly Base Bot"
+UI_PAGE_FAVICON = "https://savantly.net/img/favicon.png"
+UI_SHOW_HEADER = True
+UI_HEADER_CENTER = True
+UI_HEADER_TITLE = "BASEBOT"
+UI_HEADER_LOGO_SRC = "https://savantly.net/img/logo.png"
+UI_HEADER_LOGO_ALT = "Savantly Logo"
+UI_HEADER_LOGO_HREF = "https://savantly.net"
+UI_CHAT_BOT_NAME = "BaseBot"
+```
+
 
 ## 📚 Technical description
 

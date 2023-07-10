@@ -1,6 +1,7 @@
 import logging
 
 from . import config
+from .ui import ui
 from .callback import (
     RephrasedInputGenerationCallbackHandler,
     StreamingLLMCallbackHandler,
@@ -18,7 +19,7 @@ router = APIRouter()
 
 @router.get("/")
 async def get(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("index.html.j2", {"request": request, "ui": ui})
 
 
 @router.websocket("/chat")

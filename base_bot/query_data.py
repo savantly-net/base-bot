@@ -5,8 +5,10 @@ from langchain.chains import ConversationalRetrievalChain
 from base_bot.prompts import (REPHRASE_PROMPT, QA_PROMPT)
 from langchain.chains.llm import LLMChain
 from langchain.chains.question_answering import load_qa_chain
-from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
 from langchain.vectorstores.base import VectorStore
+
+from . import config
 
 def get_chain(
     vectorstore: VectorStore, rephrase_handler, stream_handler, tracing: bool = False
@@ -21,16 +23,18 @@ def get_chain(
         rephrase_manager.add_handler(tracer)
         stream_manager.add_handler(tracer)
 
-    rephrase_generator_llm = OpenAI(
-        temperature=0,
-        verbose=True,
+    rephrase_generator_llm = ChatOpenAI(
+        model=config.LLM_REPRHASING_MODEL,
+        temperature=config.LLM_REPHRASING_TEMPERATURE,
+        verbose=config.LLM_REPHRASING_VERBOSE,
         callback_manager=rephrase_manager,
     )
-    streaming_llm = OpenAI(
+    streaming_llm = ChatOpenAI(
         streaming=True,
         callback_manager=stream_manager,
-        verbose=True,
-        temperature=0,
+        verbose=config.LLM_STREAMING_VERBOSE,
+        temperature=config.LLM_STREAMING_TEMPERATURE,
+        model=config.LLM_STREAMING_MODEL,
     )
 
     rephrase_generator = LLMChain(

@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Chat Your Data</title>
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <title>{{ ui.page_title }}</title>
+    <meta name="description" content="{{ ui.page_description }}" />
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
     <style>
         .chat-body {
             width: 550px;
-            margin: 50px auto;
+            margin: 25px auto;
         }
         .card-body {
             background-color: #333;
@@ -32,7 +33,7 @@
         }
         .form-control {
             width: 80%;
-            background-color: #333;
+            background-color: #444;
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -40,7 +41,7 @@
             margin-right: 10px;
         }
         #send {
-            background-color: #4C4CFF;
+            background-color: #005673;
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -49,8 +50,29 @@
         .form-message {
           margin-top: 10px;
         }
+        .header {
+            color: #DDD;
+            line-height: 1.35;
+            width: 100%;
+            display: flex;
+            justify-content: start;
+        }
+        .header-title {
+            font-size: 1.5rem;
+            font-family: 'Poppins', 'Roboto', sans-serif;
+            letter-spacing: 0rem;
+            font-kerning: normal;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+        .spacer {
+            flex-grow: 1;
+        }
+        {% include 'custom.css' %}
     </style>
     <script>
+
+        var chatbotName = "{{ ui.chat_bot_name }}";
 
         function getWsEndpoint() {
             var protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
@@ -70,12 +92,12 @@
                     var div = document.createElement('div');
                     div.className = 'server-message';
                     var p = document.createElement('p');
-                    p.innerHTML = "<strong>" + "Chatbot: " + "</strong>";
+                    p.innerHTML = "<strong>" + chatbotName + ": " + "</strong>";
                     div.appendChild(p);
                     messages.appendChild(div);
                 } else if (data.type === "stream") {
                     var header = document.getElementById('header');
-                    header.innerHTML = "Chatbot is typing...";
+                    header.innerHTML = chatbotName + " is typing...";
                     var p = messages.lastChild.lastChild;
                     if (data.message === "\n") {
                         p.innerHTML += "<br>";
@@ -130,9 +152,22 @@
     </script>
 </head>
 <body class="bg-black">
+    {% if ui.show_header %}
+    <div class="header">
+        {% if ui.header_center %}
+        <div class="spacer"></div>
+        {% endif %}
+        {% if ui.header_logo_src %}
+        <a href="{{ ui.header_logo_href }}" class="header-logo">
+            <img src="{{ ui.header_logo_src }}" alt="{{ ui.header_logo_alt }}" class="w-32 mx-auto">
+        </a>
+        {% endif %}
+        <h2 class="header-title">{{ ui.header_title }}</h2>
+        <div class="spacer"></div>
+    </div>
+    {% endif %}
     <div class="chat-body card">
         <div class="card-body p-5">
-            <h4 class="card-title text-center text-xl font-medium"> Chat Your Data </h4>
             <p class="card-text text-center text-sm" id="header"> Ask a question </p>
             <hr class="border-gray-500 mb-5" style="margin-top: 20px;">
             <div id="messages" class="overflow-auto" style="max-height: 500px;">

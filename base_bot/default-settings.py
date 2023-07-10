@@ -18,3 +18,22 @@ LOGGING_LEVEL = "DEBUG"
 TRACING = True
 
 TEMPLATES_DIR = f"{PROJECT_DIRECTORY}/templates"
+
+LLM_REPRHASING_MODEL = "gpt-3.5-turbo"
+LLM_REPHRASING_TEMPERATURE = 0.0
+LLM_REPHRASING_VERBOSE = True
+LLM_STREAMING_MODEL = "gpt-3.5-turbo"
+LLM_STREAMING_TEMPERATURE = 0.0
+LLM_STREAMING_VERBOSE = True
+
+
+UI_PAGE_TITLE = "Savantly Base Bot"
+UI_PAGE_DESCRIPTION = "Savantly Base Bot"
+UI_PAGE_FAVICON = "https://savantly.net/img/favicon.png"
+UI_SHOW_HEADER = True
+UI_HEADER_CENTER = True
+UI_HEADER_TITLE = "BASEBOT"
+UI_HEADER_LOGO_SRC = "https://savantly.net/img/logo.png"
+UI_HEADER_LOGO_ALT = "Savantly Logo"
+UI_HEADER_LOGO_HREF = "https://savantly.net"
+UI_CHAT_BOT_NAME = "BaseBot"
