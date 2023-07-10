@@ -1,0 +1,20 @@
+services:
+  my-gpt:
+    image: my-gpt
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 9000:9000
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      PINECONE_API_KEY: ${PINECONE_API_KEY}
+      PINECONE_INDEX_NAME: "my-demo"
+      PINECONE_ENV: ${PINECONE_ENV}
+      SAVANTLY_CHAT_VECTORSTORE_CREATE_IF_MISSING: "False"
+    volumes:
+      - ./data/docs:/app/data/docs
+      - ./src/vectorstore.py:/app/base_bot/vectorstore.py
+      - ./src/settings.py:/app/settings.py
+      - ./data/stores:/app/data/stores
+

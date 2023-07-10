@@ -1,5 +1,6 @@
 """Main entrypoint for the app."""
 
+import os
 from .vectorstore import get_vectorstore
 from .api import router
 from fastapi import FastAPI
@@ -22,4 +23,4 @@ async def startup_event():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=9000)
+    uvicorn.run(app, host=os.getenv("HOST", "0.0.0.0"), port=os.getenv("PORT", 9000))
