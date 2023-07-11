@@ -1,7 +1,7 @@
 # Pinecone Example
 
-This example uses Postgres to store the datas.  
-It also provides a simple ingest script to load data from the database.  
+This example uses pinecone to store the vectors.  
+It also provides a simple ingest script to load data from the docs folder into pinecone.  
 
 ## Quick start
 

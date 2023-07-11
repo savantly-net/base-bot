@@ -18,16 +18,17 @@
 #       - ./src/settings.py:/app/settings.py
 #       - ./data/stores:/app/data/stores
 
-version: "3"
+
 services:
   postgres:
-    image: postgres:latest
-    restart: always
+    image: postgres
+    environment:
+      POSTGRES_USER: haystack
+      POSTGRES_PASSWORD: haystack
+      POSTGRES_DB: haystack
     ports:
       - 5432:5432
-    environment:
-      - POSTGRES_USER=bot_user
-      - POSTGRES_PASSWORD=bot_password
-      - POSTGRES_DB=bot_database
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./pgdata:/var/lib/postgresql/data
+      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
+

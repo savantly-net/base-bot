@@ -8,7 +8,7 @@ TEST_IMAGE_NAME := $(IMAGE_REPO)/$(IMAGE_NAME):test
 .PHONY: ingest
 ingest:
 	$(call setup_env, .env)
-	@echo "Warning: this will add embeddings to the Postgres database"
+	@echo "Warning: this will add embeddings to the vector store."
 	@echo "Press enter to continue or Ctrl+C to cancel."
 	@read
 	python src/ingest.py
