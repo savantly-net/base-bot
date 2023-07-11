@@ -1,14 +1,40 @@
 """Create a ConversationalRetrievalChain for question/answering."""
+import imp
+import logging
+import sys
+
 from langchain.callbacks.base import BaseCallbackManager
 from langchain.callbacks.tracers import LangChainTracer
 from langchain.chains import ConversationalRetrievalChain
-from base_bot.prompts import (REPHRASE_PROMPT, QA_PROMPT)
 from langchain.chains.llm import LLMChain
 from langchain.chains.question_answering import load_qa_chain
-from langchain.chat_models import ChatOpenAI
 from langchain.vectorstores.base import VectorStore
 
+from base_bot.prompts import QA_PROMPT, REPHRASE_PROMPT
+
 from . import config
+
+
+# dynamic import
+def dynamic_imp(name):
+    # find_module() method is used
+    # to find the module and return
+    # its description and path
+    try:
+        fp, path, desc = imp.find_module(name, [".", "base_bot/llm"])
+
+    except ImportError as e:
+        logging.error("module not found: " + name + " " + str(e))
+
+    try:
+        # load_modules loads the module
+        # dynamically ans takes the filepath
+        # module and description as parameter
+        return imp.load_module(name, fp, path, desc)
+
+    except Exception as e:
+        logging.error("error loading module: " + name + " " + str(e))
+
 
 def get_chain(
     vectorstore: VectorStore, rephrase_handler, stream_handler, tracing: bool = False
@@ -23,13 +49,14 @@ def get_chain(
         rephrase_manager.add_handler(tracer)
         stream_manager.add_handler(tracer)
 
-    rephrase_generator_llm = ChatOpenAI(
+    llm_package = dynamic_imp(config.LLM_MODULE)
+    rephrase_generator_llm = llm_package.getLLM(
         model=config.LLM_REPRHASING_MODEL,
         temperature=config.LLM_REPHRASING_TEMPERATURE,
         verbose=config.LLM_REPHRASING_VERBOSE,
         callback_manager=rephrase_manager,
     )
-    streaming_llm = ChatOpenAI(
+    streaming_llm = llm_package.getLLM(
         streaming=True,
         callback_manager=stream_manager,
         verbose=config.LLM_STREAMING_VERBOSE,
