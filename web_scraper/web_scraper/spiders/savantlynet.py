@@ -33,9 +33,14 @@ class SavantlynetSpider(scrapy.Spider):
         paragraphs = section.xpath('.//p//text()').getall()
         data['paragraphs'] = paragraphs
 
-        # Extract headers within the section
-        headers = section.xpath('.//h1|.//h2|.//h3|.//h4|.//h5|.//h6').getall()
-        data['headers'] = headers
+        # Extract headers with associated lists within the section
+        headers = section.xpath('.//h1|.//h2|.//h3|.//h4|.//h5|.//h6')
+        extracted_data = {}
+        for header in headers:
+            header_text = header.xpath('.//text()').get()
+            list_elements = header.xpath('./following-sibling::ul[1]/li/text()').getall()
+            extracted_data[header_text] = list_elements
+        data['extracted_data'] = extracted_data
 
         # Extract links within the section
         links = section.css('a::attr(href)').getall()
@@ -44,11 +49,5 @@ class SavantlynetSpider(scrapy.Spider):
         # Extract image URLs within the section
         image_urls = section.css('img::attr(src)').getall()
         data['image_urls'] = image_urls
-
-        # Extract lists within the section
-        lists = []
-        list_elements = section.css('ul li::text').getall()
-        lists.append(list_elements)
-        data['lists'] = lists
 
         return data
