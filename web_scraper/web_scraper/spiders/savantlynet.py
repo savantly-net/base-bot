@@ -1,55 +1,54 @@
-# import scrapy
-# from scrapy.linkextractors import LinkExtractor
-# from scrapy.spiders import CrawlSpider, Rule
-
-
-# class SavantlynetSpider(CrawlSpider):
-#     name = "savantlynet"
-#     allowed_domains = ["savantly.net"]
-#     start_urls = ["https://savantly.net"]
-
-#     rules = (Rule(LinkExtractor(allow=r"Items/"), callback="parse_item", follow=True),)
-
-#     def parse_item(self, response):
-#         item = {}
-#         #item["domain_id"] = response.xpath('//input[@id="sid"]/@value').get()
-#         #item["name"] = response.xpath('//div[@id="name"]').get()
-#         #item["description"] = response.xpath('//div[@id="description"]').get()
-#         return item
-
 import scrapy
 
-class MySpider(scrapy.Spider):
+class SavantlynetSpider(scrapy.Spider):
     name = 'savantlynet'
     allowed_domains = ['savantly.net']
-    start_urls = ['http://savantly.net/']
+    start_urls = ['https://savantly.net']
 
     def parse(self, response):
-        # Extract data using XPath or CSS selectors
-        extracted_data = {}
+        home_section = response.xpath('/html/body/div[1]/div[1]/div/div/div[3]/section[1]')
+        about_section = response.xpath('/html/body/div[1]/div[1]/div/div/div[3]/section[2]')
+        services_section = response.xpath('/html/body/div[1]/div[1]/div/div/div[3]/section[3]')
+        portfolio_section = response.xpath('/html/body/div[1]/div[1]/div/div/div[3]/section[4]')
+        contact_section = response.xpath('/html/body/div[1]/div[1]/div/div/div[3]/section[5]')
 
-        # Extract text content from paragraphs
-        paragraphs = response.xpath('//p//text()').getall()
-        extracted_data['paragraphs'] = paragraphs
-
-        # Extract links
-        links = response.css('a::attr(href)').getall()
-        extracted_data['links'] = links
-
-        # Extract image URLs
-        image_urls = response.css('img::attr(src)').getall()
-        extracted_data['image_urls'] = image_urls
-
-        # Extract form field names
-        form_fields = response.css('form input::attr(name)').getall()
-        extracted_data['form_fields'] = form_fields
-
-        # Extract headings
-        headings = response.css('h1, h2, h3, h4, h5, h6').getall()
-        extracted_data['headings'] = headings
+        extracted_data = {
+            'home_section': self.extract_section_data(home_section),
+            'about_section': self.extract_section_data(about_section),
+            'services_section': self.extract_section_data(services_section),
+            'portfolio_section': self.extract_section_data(portfolio_section),
+            'contact_section': self.extract_section_data(contact_section),
+        }
 
         yield extracted_data
 
         # Follow links to other pages on the site
         for link in response.css('a::attr(href)').getall():
             yield response.follow(link, self.parse)
+
+    def extract_section_data(self, section):
+        data = {}
+
+        # Extract paragraphs within the section
+        paragraphs = section.xpath('.//p//text()').getall()
+        data['paragraphs'] = paragraphs
+
+        # Extract headers within the section
+        headers = section.xpath('.//h1|.//h2|.//h3|.//h4|.//h5|.//h6').getall()
+        data['headers'] = headers
+
+        # Extract links within the section
+        links = section.css('a::attr(href)').getall()
+        data['links'] = links
+
+        # Extract image URLs within the section
+        image_urls = section.css('img::attr(src)').getall()
+        data['image_urls'] = image_urls
+
+        # Extract lists within the section
+        lists = []
+        list_elements = section.css('ul li::text').getall()
+        lists.append(list_elements)
+        data['lists'] = lists
+
+        return data
