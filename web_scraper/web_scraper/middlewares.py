@@ -4,7 +4,9 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+from scrapy.http import Response
 import os
+import json
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
@@ -32,7 +34,7 @@ class WebScraperSpiderMiddleware:
         # Should return None or raise an exception.
         return None
 
-    def process_spider_output(self, response, result, spider):
+    def process_spider_output(self, response: Response, result, spider):
         # Called with the results returned from the Spider, after
         # it has processed the response.
 
@@ -44,8 +46,16 @@ class WebScraperSpiderMiddleware:
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
-        with open(f"{folder_path}/{response_url}.html", 'wb') as html_file:
-            html_file.write(response.body)
+        item = {
+            'url': response.url,
+            'status': response.status,
+            'text': '\n'.join(response.xpath('//body//text()').getall()),
+        }
+        # Serializing json
+        json_object = json.dumps(item, indent=4)
+
+        with open(f"{folder_path}/{response_url}.json", 'w') as exported_file:
+            exported_file.write(json_object)
 
         # Must return an iterable of Request, or item objects.
         for i in result:
