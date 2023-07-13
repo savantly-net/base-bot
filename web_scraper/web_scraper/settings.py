@@ -44,9 +44,9 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    "web_scraper.middlewares.WebScraperSpiderMiddleware": 543,
-#}
+SPIDER_MIDDLEWARES = {
+    "web_scraper.middlewares.WebScraperSpiderMiddleware": 543,
+}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
@@ -90,11 +90,14 @@ ITEM_PIPELINES = {
 # Set settings whose default value is deprecated to a future-proof value
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
-FEED_EXPORT_ENCODING = "utf-8"
 
+FEEDS = {
+      "../data/docs/%(name)s.json": {
+         "format": "json",
+         "export_indent": 4,
+         "encoding": "utf8",
+         "overwrite": True,
+      }
+   }
 
-FEED_URI = '../data/docs/data.json'
-
-
-FEED_FORMAT = 'json'
 FEED_EXPORT_INDENT = 4
