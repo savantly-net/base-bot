@@ -4,10 +4,14 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+import os
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 
+PROJECT_DIRECTORY = f"{os.path.dirname(os.path.realpath(__file__))}/../.."
+
+DOCS_PATH = f"{PROJECT_DIRECTORY}/data/docs"
 
 class WebScraperSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
@@ -31,6 +35,17 @@ class WebScraperSpiderMiddleware:
     def process_spider_output(self, response, result, spider):
         # Called with the results returned from the Spider, after
         # it has processed the response.
+
+        # write response to file
+        response_url = response.url.replace("https://", "").replace("http://", "")
+        response_url = response_url.replace("/", "_")
+
+        folder_path = f"{DOCS_PATH}/scraped/{spider.name}"
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        with open(f"{folder_path}/{response_url}.html", 'wb') as html_file:
+            html_file.write(response.body)
 
         # Must return an iterable of Request, or item objects.
         for i in result:
