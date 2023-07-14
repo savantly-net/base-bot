@@ -28,15 +28,14 @@ class GenericSpider(scrapy.Spider):
     name = "generic"
     allowed_domains = ["savantly.net"]
 
-    custom_settings = {
-        'FEED_FORMAT': 'jsonlines',
-        'FEED_URI': 'output.jsonl'
-    }
-
     def __init__(self, start_url=None, *args, **kwargs):
         super(GenericSpider, self).__init__(*args, **kwargs)
         if start_url:
             self.start_urls = [start_url]
+
+    def start_requests(self):
+        for url in self.start_urls:
+            yield scrapy.Request(url, callback=self.parse)
 
     def parse(self, response):
         scraped_page = ScrapedPage()
@@ -46,3 +45,11 @@ class GenericSpider(scrapy.Spider):
         scraped_page['text'] = '\n'.join(response.xpath('//body//text()').getall())
         scraped_page['links'] = [link.url for link in LinkExtractor(allow_domains=self.allowed_domains).extract_links(response)]
         yield scraped_page
+
+
+class SaveHtmlPipeline(object):
+    def process_item(self, item, spider):
+        filename = f"{DOCS_PATH}/{item['url'].replace('/', '_')}.html"
+        with open(filename, 'wb') as f:
+            f.write(item['text'].encode('utf-8'))
+        return item
