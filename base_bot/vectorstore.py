@@ -10,11 +10,18 @@ from .document_loader import get_document_loader
 from .ingest import ingest_docs
 
 vectorstore: Optional[VectorStore] = None
-vectorstore_path = config.VECTORSTORE_PATH
+vectorstore_variants = config.VECTORSTORE_VARIANTS
 
 
-def _load_vectorstore() -> VectorStore:
+def _load_vectorstore(variant: str) -> VectorStore:
     logging.info("loading pickled vectorstore...")
+    logging.info(f"variant: {variant if variant else 'default'}")
+
+    vectorstore_path = config.VECTORSTORE_PATH
+    
+    if variant and variant in vectorstore_variants:
+        vectorstore_path = f"{config.VECTORSTORE_PATH}.{variant}"
+
     if not Path(vectorstore_path).exists():
         if config.VECTORSTORE_CREATE_IF_MISSING:
             logging.info(f"{vectorstore_path} does not exist, creating from docs")
@@ -33,8 +40,8 @@ def _load_vectorstore() -> VectorStore:
         return vstore
 
 
-def get_vectorstore() -> VectorStore:
+def get_vectorstore(variant = "") -> VectorStore:
     global vectorstore
     if vectorstore is None:
-        vectorstore = _load_vectorstore()
+        vectorstore = _load_vectorstore(variant)
     return vectorstore

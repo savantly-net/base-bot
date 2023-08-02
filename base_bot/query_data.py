@@ -2,6 +2,7 @@
 import imp
 import logging
 import sys
+from typing import Union
 
 from langchain.callbacks.base import BaseCallbackManager
 from langchain.callbacks.tracers import LangChainTracer
@@ -37,8 +38,9 @@ def dynamic_imp(name):
 
 
 def get_chain(
-    vectorstore: VectorStore, rephrase_handler, stream_handler, tracing: bool = False
+    vectorstore: Union[VectorStore, any], rephrase_handler, stream_handler, tracing: bool = False
 ) -> ConversationalRetrievalChain:
+    _vectorstore = vectorstore() if callable(vectorstore) else vectorstore
     manager = BaseCallbackManager([])
     rephrase_manager = BaseCallbackManager([rephrase_handler])
     stream_manager = BaseCallbackManager([stream_handler])
@@ -72,7 +74,7 @@ def get_chain(
     )
 
     qa = ConversationalRetrievalChain(
-        retriever=vectorstore.as_retriever(),
+        retriever=_vectorstore.as_retriever(),
         combine_docs_chain=doc_chain,
         question_generator=rephrase_generator,
         callback_manager=manager,

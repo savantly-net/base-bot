@@ -18,8 +18,9 @@ router = APIRouter()
 
 
 @router.get("/")
-async def get(request: Request):
-    return templates.TemplateResponse("index.html.j2", {"request": request, "ui": ui})
+@router.get("/{chat_variant:str}")
+async def get(request: Request, chat_variant: str = ""):
+    return templates.TemplateResponse("index.html.j2", {"request": request, "ui": ui, "chat_variant": chat_variant})
 
 
 @router.websocket("/chat")
@@ -28,23 +29,32 @@ async def websocket_endpoint(websocket: WebSocket):
     rephrasing_handler = RephrasedInputGenerationCallbackHandler(websocket)
     stream_handler = StreamingLLMCallbackHandler(websocket)
     chat_history = []
-    vstore = get_vectorstore()
-    qa_chain = get_chain(vstore, rephrasing_handler, stream_handler)
     # Use the below line instead of the above line to enable tracing
     # Ensure `langchain-server` is running
     # qa_chain = get_chain(vectorstore, question_handler, stream_handler, tracing=True)
 
+    def get_vstore(chat_variant: str):
+        def vstore():
+            return get_vectorstore(chat_variant)
+        return vstore
+
     while True:
         try:
             # Receive and send back the client message
-            user_input_text = await websocket.receive_text()
-            logging.info(f"received message: {user_input_text}")
+            user_input = await websocket.receive_json()
+            logging.info(f"received message: {user_input}")
+
+            user_input_text = user_input["message"]
+
             resp = ChatResponse(sender="you", message=user_input_text, type="stream")
             await websocket.send_json(resp.dict())
 
             # Construct a response
             start_resp = ChatResponse(sender="bot", message="", type="start")
             await websocket.send_json(start_resp.dict())
+
+            vstore = get_vstore(user_input["chat_variant"])
+            qa_chain = get_chain(vstore, rephrasing_handler, stream_handler)
 
             result = await qa_chain.acall(
                 {"question": user_input_text, "chat_history": chat_history}

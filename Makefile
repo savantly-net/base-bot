@@ -2,6 +2,9 @@ IMAGE_REPO ?= docker.io/savantly
 IMAGE_NAME ?= base-bot
 IMAGE_TAG ?= latest
 
+GIT_COMMIT := $(shell git rev-parse --short HEAD)
+
+COMMIT_IMAGE_NAME := $(IMAGE_REPO)/$(IMAGE_NAME):$(GIT_COMMIT)
 FINAL_IMAGE_NAME := $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
 TEST_IMAGE_NAME := $(IMAGE_REPO)/$(IMAGE_NAME):test
 
