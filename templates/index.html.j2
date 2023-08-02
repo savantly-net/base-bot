@@ -72,15 +72,16 @@
     </style>
     <script>
 
-        var chatbotName = "{{ ui.chat_bot_name }}";
+        const chatbotName = "{{ ui.chat_bot_name }}";
+        const chatVariant = "{{ chat_variant }}";
 
         function getWsEndpoint() {
             var protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
             var endpoint = protocol + "//" + window.location.host + "/chat";
             return endpoint;
         }
-        var endpoint = getWsEndpoint();
-        var ws = new WebSocket(endpoint);
+        const endpoint = getWsEndpoint();
+        const ws = new WebSocket(endpoint);
         // Receive message from server word by word. Display the words as they are received.
         ws.onmessage = function (event) {
             var messages = document.getElementById('messages');
@@ -141,7 +142,11 @@
             if (message === "") {
                 return;
             }
-            ws.send(message);
+            const payload = {
+                "message": message,
+                "chat_variant": chatVariant
+            };
+            ws.send(JSON.stringify(payload));
             document.getElementById('messageText').value = "";
 
             // Turn the button into a loading button
