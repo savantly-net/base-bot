@@ -1,0 +1,42 @@
+version: "3"
+services:
+  nexus_analytics:
+    image: savantly/fuzzys-analytics:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fuzzys-analytics
+    ports:
+      - 8501:8501
+    environment:
+      - ANALYTICS_DB_HOST=db
+      - ANALYTICS_DB_USER=fuzzysDBAdmin
+      - ANALYTICS_DB_PASSWORD=fuzzy
+      - ANALYTICS_DB_DATABASE=fuzzy
+    volumes:
+      - .:/app
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=fuzzysDBAdmin
+      - POSTGRES_PASSWORD=fuzzy
+      - POSTGRES_DB=fuzzy
+    ports:
+      - 5432:5432
+    volumes:
+      #- ./data:/var/lib/postgresql/data
+      - ./db/01-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./db/02-sample-data.sql:/docker-entrypoint-initdb.d/02-sample-data.sql
+      - ./db/03-sample-data.sql:/docker-entrypoint-initdb.d/03-sample-data.sql
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@pgadmin.com
+      - PGADMIN_DEFAULT_PASSWORD=adminpassword
+    ports:
+      - "5050:80"
+    depends_on:
+      - db

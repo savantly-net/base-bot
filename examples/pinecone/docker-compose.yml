@@ -5,11 +5,11 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 9000:9000
+      - 9001:9000
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       PINECONE_API_KEY: ${PINECONE_API_KEY}
-      PINECONE_INDEX_NAME: "my-demo"
+      PINECONE_INDEX_NAME: "base-bot-index"
       PINECONE_ENV: ${PINECONE_ENV}
       SAVANTLY_CHAT_VECTORSTORE_CREATE_IF_MISSING: "False"
     volumes:
