@@ -5,6 +5,8 @@ The app leverages LangChain's streaming support and async API to update the page
 
 You can run the docker container with mounted volumes to modify the default behavior.   
 
+![screenshot](./docs/screenshot.png)
+
 ## TLDR;
 Run in docker (requires your OPENAI_API_KEY as an env variable)  
 ```shell
@@ -12,11 +14,26 @@ docker run -p 9000:9000 -e OPENAI_API_KEY=${OPENAI_API_KEY} savantly/base-bot
 ```
 
 Or deploy the Helm Chart [chart info](./helm/base-bot/)
-```shell
 
-```
+[Helm](https://helm.sh) must be installed to use the charts.  Please refer to
+Helm's [documentation](https://helm.sh/docs) to get started.
 
-![screenshot](./docs/screenshot.png)
+Once Helm has been set up correctly, add the repo as follows:
+
+  helm repo add base-bot https://savantly.github.io/base-bot
+
+If you had already added this repo earlier, run `helm repo update` to retrieve
+the latest versions of the packages.  You can then run `helm search repo
+base-bot` to see the charts.
+
+To install the base-bot chart:
+
+    helm install my-base-bot base-bot/base-bot
+
+To uninstall the chart:
+
+    helm delete my-base-bot
+
 
 ## Customizing
 The easiest way to get started is to copy the `docker-compose.yml` to your project folder and create a data directory for your own domain.  
