@@ -97,6 +97,21 @@ Question-Answering has the following steps
 3. Pass the standalone question and relevant documents to GPT-3 to generate a final answer.
 
 
+## Chatwoot Integration
+
+An endpoint is provided for Chatwoot webhook integration.  
+This allows Base-Bot to reply as an "Agent Bot" for any Chatwoot inbox.  
+Enable it with the setting `CHATWOOT_ENABLED = True`  
+
+Additional Settings  
+```python
+CHATWOOT_URL = "https://chatwoot.com"
+CHATWOOT_BOT_TOKEN = ""
+CHATWOOT_BOT_VARIANT = ""
+```
+
+
+
 ## Roadmap
 
 - [x] Parameterize prompts and ingestion settings

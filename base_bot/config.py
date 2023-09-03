@@ -5,7 +5,7 @@ from dynaconf import Dynaconf
 
 settings = Dynaconf(
     envvar_prefix="SAVANTLY_CHAT",
-    settings_files=["base_bot/default-settings.py", "settings.py", ".secrets.py"],
+    settings_files=["base_bot/default-settings.py", "settings.py", "local_settings.py", ".secrets.py"],
 )
 
 # `envvar_prefix` = export envvars with `export SAVANTLY_CHAT_FOO=bar`.
@@ -57,3 +57,9 @@ UI_HEADER_LOGO_ALT = settings.UI_HEADER_LOGO_ALT
 UI_HEADER_LOGO_HREF = settings.UI_HEADER_LOGO_HREF
 UI_CHAT_BOT_NAME = settings.UI_CHAT_BOT_NAME
 
+
+# Chatwoot
+CHATWOOT_ENABLED = settings.CHATWOOT_ENABLED
+CHATWOOT_URL = settings.CHATWOOT_URL
+CHATWOOT_BOT_TOKEN = settings.CHATWOOT_BOT_TOKEN
+CHATWOOT_BOT_VARIANT = settings.CHATWOOT_BOT_VARIANT
