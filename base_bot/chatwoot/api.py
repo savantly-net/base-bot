@@ -25,8 +25,8 @@ def send_to_chatwoot(account, conversation, message: str):
     return r.json()
 
 
-@router.post("/langchain")  # type: ignore
-async def langchain(payload: ChatwootWebhookPayload):
+@router.post("/bot")  # type: ignore
+async def bot(payload: ChatwootWebhookPayload):
     chatwoot_msg = "None"
     conversation = payload.conversation.display_id
     account = payload.account.id

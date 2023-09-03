@@ -110,6 +110,7 @@ CHATWOOT_BOT_TOKEN = ""
 CHATWOOT_BOT_VARIANT = ""
 ```
 
+The webhook URL for Base-Bot is `/chatwoot/bot`
 
 
 ## Roadmap
