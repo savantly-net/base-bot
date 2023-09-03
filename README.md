@@ -11,6 +11,11 @@ Run in docker (requires your OPENAI_API_KEY as an env variable)
 docker run -p 9000:9000 -e OPENAI_API_KEY=${OPENAI_API_KEY} savantly/base-bot
 ```
 
+Or deploy the Helm Chart [chart info](./helm/base-bot/)
+```shell
+
+```
+
 ![screenshot](./docs/screenshot.png)
 
 ## Customizing
