@@ -11,6 +11,11 @@ Run in docker (requires your OPENAI_API_KEY as an env variable)
 docker run -p 9000:9000 -e OPENAI_API_KEY=${OPENAI_API_KEY} savantly/base-bot
 ```
 
+Or deploy the Helm Chart [chart info](./helm/base-bot/)
+```shell
+
+```
+
 ![screenshot](./docs/screenshot.png)
 
 ## Customizing
@@ -92,6 +97,22 @@ Question-Answering has the following steps
 3. Pass the standalone question and relevant documents to GPT-3 to generate a final answer.
 
 
+## Chatwoot Integration
+
+An endpoint is provided for Chatwoot webhook integration.  
+This allows Base-Bot to reply as an "Agent Bot" for any Chatwoot inbox.  
+Enable it with the setting `CHATWOOT_ENABLED = True`  
+
+Additional Settings  
+```python
+CHATWOOT_URL = "https://chatwoot.com"
+CHATWOOT_BOT_TOKEN = ""
+CHATWOOT_BOT_VARIANT = ""
+```
+
+The webhook URL for Base-Bot is `/chatwoot/bot`
+
+
 ## Roadmap
 
 - [x] Parameterize prompts and ingestion settings
@@ -99,6 +120,6 @@ Question-Answering has the following steps
 - [x] Create Docker image
 - [x] Create docker-compose for rapid testing
 - [ ] Create parameters and code to substitute the pickled vector store for Pinecone or another implementation
-- [ ] Create Helm chart
+- [x] Create Helm chart
 - [ ] Create web-component for dropping the chat on any web page 
 - [ ] Parameterize additional chain settings??
