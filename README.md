@@ -104,6 +104,6 @@ Question-Answering has the following steps
 - [x] Create Docker image
 - [x] Create docker-compose for rapid testing
 - [ ] Create parameters and code to substitute the pickled vector store for Pinecone or another implementation
-- [ ] Create Helm chart
+- [x] Create Helm chart
 - [ ] Create web-component for dropping the chat on any web page 
 - [ ] Parameterize additional chain settings??
