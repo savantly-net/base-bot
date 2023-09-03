@@ -2,6 +2,9 @@ IMAGE_REPO ?= docker.io/savantly
 IMAGE_NAME ?= base-bot
 IMAGE_TAG ?= latest
 
+VERSION := $(shell cat VERSION)
+NEXT_VERSION := $(shell echo $(VERSION) | awk -F. '{$$NF = $$NF + 1;} 1' | sed 's/ /./g')
+
 GIT_COMMIT := $(shell git rev-parse --short HEAD)
 
 COMMIT_IMAGE_NAME := $(IMAGE_REPO)/$(IMAGE_NAME):$(GIT_COMMIT)
@@ -33,3 +36,35 @@ test-image:
 docs:
 	@echo "Generating docs"
 	docker run --rm --volume "$(PROJECT_DIR)/helm:/helm-docs:rw" jnorwood/helm-docs:latest
+
+.PHONY: ensure-git-repo-pristine
+ensure-git-repo-pristine:
+	@echo "Ensuring git repo is pristine"
+	@[[ $(shell git status --porcelain=v1 2>/dev/null | wc -l) -gt 0 ]] && echo "Git repo is not pristine" && exit 1 || echo "Git repo is pristine"
+
+.PHONY: release
+release: ensure-git-repo-pristine docs bump-version update-chart-yaml-with-next-version
+	@echo "Preparing release..."
+	@echo "Version: $(VERSION)"
+	@echo "Commit: $(GIT_COMMIT)"
+	@echo "Image Tag: $(IMAGE_TAG)"
+	git tag -a $(VERSION) -m "Release $(VERSION)"
+	git push origin $(VERSION)
+	@echo "Release $(VERSION) created"
+	@echo $(NEXT_VERSION) > VERSION
+	git add VERSION
+	git commit -m "Bump version to $(NEXT_VERSION)"
+
+.PHONY: bump-version
+bump-version:
+	@echo "Bumping version to $(NEXT_VERSION)"
+	@echo $(NEXT_VERSION) > VERSION
+	git add VERSION
+
+
+.PHONY: update-chart-yaml-with-next-version
+update-chart-yaml-with-next-version:
+	@echo "Updating Chart.yaml with version $(NEXT_VERSION)"
+	sed -i "s/version:.*/version: $(NEXT_VERSION)/" helm/base-bot/Chart.yaml
+	sed -i "s/appVersion:.*/appVersion: $(NEXT_VERSION)/" helm/base-bot/Chart.yaml
+	git add helm/base-bot/Chart.yaml
