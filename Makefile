@@ -14,6 +14,10 @@ TEST_IMAGE_NAME := $(IMAGE_REPO)/$(IMAGE_NAME):test
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
+.PHONY: requirements
+requirements:
+	pip install -r requirements.txt
+
 .PHONY: start
 start:
 	uvicorn base_bot.main:app --reload --port 9000

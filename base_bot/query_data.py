@@ -29,7 +29,7 @@ def dynamic_imp(name):
 
     try:
         # load_modules loads the module
-        # dynamically ans takes the filepath
+        # dynamically and takes the filepath
         # module and description as parameter
         return imp.load_module(name, fp, path, desc)
 

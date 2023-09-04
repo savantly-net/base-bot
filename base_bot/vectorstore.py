@@ -1,47 +1,31 @@
+import importlib
 import logging
-import pickle
-from pathlib import Path
-from typing import Optional
 
 from langchain.vectorstores import VectorStore
 
+from base_bot.vectorstores.provider import VectorStoreProvider
+
 from . import config
-from .document_loader import get_document_loader
-from .ingest import ingest_docs
 
-vectorstore: Optional[VectorStore] = None
-vectorstore_variants = config.VECTORSTORE_VARIANTS
+mod_package = config.VECTORSTORE_PACKAGE
+mod_class = config.VECTORSTORE_IMPLEMENTATION
 
 
-def _load_vectorstore(variant: str) -> VectorStore:
-    logging.info("loading pickled vectorstore...")
-    logging.info(f"variant: {variant if variant else 'default'}")
+# Dynamically import the selected implementation
+try:
+    logging.info(f"importing module {mod_package}")
+    vector_store_module = importlib.import_module(mod_package)
 
-    vectorstore_path = config.VECTORSTORE_PATH
-    
-    if variant and variant in vectorstore_variants:
-        vectorstore_path = f"{config.VECTORSTORE_PATH}.{variant}"
+    logging.info(f"importing class {mod_class} from module {mod_package}")
+    VectorStoreImplementation = getattr(vector_store_module, mod_class)
+except ImportError as err:
+    logging.error(f"Error: {err}")
+    exit(1)
 
-    if not Path(vectorstore_path).exists():
-        if config.VECTORSTORE_CREATE_IF_MISSING:
-            logging.info(f"{vectorstore_path} does not exist, creating from docs")
-
-            ingest_docs(
-                document_loader=get_document_loader(config.DOCS_PATH),
-                vectorstore_path=vectorstore_path,
-            )
-        else:
-            raise ValueError(
-                f"{vectorstore_path} does not exist, please run ingest.py first"
-            )
-    with open(vectorstore_path, "rb") as f:
-        vstore = pickle.load(f)
-        logging.info("loaded vectorstore")
-        return vstore
+# Instantiate the selected implementation
+vector_store_provider: VectorStoreProvider = VectorStoreImplementation()
 
 
-def get_vectorstore(variant = "") -> VectorStore:
-    global vectorstore
-    if vectorstore is None:
-        vectorstore = _load_vectorstore(variant)
-    return vectorstore
+def get_vectorstore(variant="") -> VectorStore:
+    global vector_store_provider
+    return vector_store_provider.get_vectorstore(variant)
