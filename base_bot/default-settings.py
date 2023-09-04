@@ -4,15 +4,31 @@ PROJECT_DIRECTORY = f"{os.path.dirname(os.path.realpath(__file__))}/.."
 
 DOCS_PATH = f"{PROJECT_DIRECTORY}/data/docs"
 
-REPHRASE_PROMPT_PATH = f"{PROJECT_DIRECTORY}/data/prompts/condense_question.txt"
-QA_PROMPT_PATH = f"{PROJECT_DIRECTORY}/data/prompts/question_answer.txt"
+
+REPHRASE_PROMPT = """
+Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question.
+
+Chat History:
+{chat_history}
+Follow Up Input: {question}
+Standalone question:
+"""
+
+QA_PROMPT = """
+Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
+
+{context}
+
+Question: {question}
+Helpful Answer:
+"""
 
 VECTORSTORE_CREATE_IF_MISSING = True
 VECTORSTORE_PATH = f"{PROJECT_DIRECTORY}/data/stores/vectorstore.pkl"
 VECTORSTORE_VARIANTS = []
 
 INGEST_CHUNK_SIZE = 1000
-INGEST_CHUNK_OVERLAP = 200
+INGEST_CHUNK_OVERLAP = 100
 
 LOGGING_LEVEL = "DEBUG"
 

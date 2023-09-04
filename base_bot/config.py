@@ -16,14 +16,8 @@ settings = Dynaconf(
 
 DOCS_PATH = settings.DOCS_PATH
 
-# read the contents of the file into a variable
-REPHRASE_PROMPT: str = ""
-with open(settings.REPHRASE_PROMPT_PATH, "r") as file:
-    REPHRASE_PROMPT = file.read()
-
-QA_PROMPT: str = ""
-with open(settings.QA_PROMPT_PATH, "r") as file:
-    QA_PROMPT = file.read()
+REPHRASE_PROMPT = settings.REPHRASE_PROMPT
+QA_PROMPT = settings.QA_PROMPT
 
 VECTORSTORE_PATH = settings.VECTORSTORE_PATH
 VECTORSTORE_CREATE_IF_MISSING = settings.VECTORSTORE_CREATE_IF_MISSING
