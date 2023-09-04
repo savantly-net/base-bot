@@ -42,19 +42,6 @@ ensure-git-repo-pristine:
 	@echo "Ensuring git repo is pristine"
 	@[[ $(shell git status --porcelain=v1 2>/dev/null | wc -l) -gt 0 ]] && echo "Git repo is not pristine" && exit 1 || echo "Git repo is pristine"
 
-.PHONY: release
-release: ensure-git-repo-pristine docs bump-version update-chart-yaml-with-next-version
-	@echo "Preparing release..."
-	@echo "Version: $(VERSION)"
-	@echo "Commit: $(GIT_COMMIT)"
-	@echo "Image Tag: $(IMAGE_TAG)"
-	git tag -a $(VERSION) -m "Release $(VERSION)"
-	git push origin $(VERSION)
-	@echo "Tag $(VERSION) created and pushed to origin"
-	@echo $(NEXT_VERSION) > VERSION
-	git add VERSION
-	git commit -m "Bumped version to $(NEXT_VERSION)"
-
 .PHONY: bump-version
 bump-version:
 	@echo "Bumping version to $(NEXT_VERSION)"
@@ -68,3 +55,15 @@ update-chart-yaml-with-next-version:
 	sed "s/version:.*/version: $(VERSION)/" ./helm/base-bot/Chart.yaml
 	sed "s/appVersion:.*/appVersion: $(VERSION)/" ./helm/base-bot/Chart.yaml
 	git add helm/base-bot/Chart.yaml
+
+
+.PHONY: release
+release: ensure-git-repo-pristine docs bump-version update-chart-yaml-with-next-version
+	@echo "Preparing release..."
+	@echo "Version: $(VERSION)"
+	@echo "Commit: $(GIT_COMMIT)"
+	@echo "Image Tag: $(IMAGE_TAG)"
+	git tag -a $(VERSION) -m "Release $(VERSION)"
+	git push origin $(VERSION)
+	@echo "Tag $(VERSION) created and pushed to origin"
+	git commit -m "Released $(VERSION) and prepared for $(NEXT_VERSION)"
