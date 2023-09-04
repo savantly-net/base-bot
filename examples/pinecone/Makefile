@@ -1,9 +1,3 @@
-IMAGE_REPO ?= docker.io/savantly
-IMAGE_NAME ?= my-gpt
-IMAGE_TAG ?= latest
-
-FINAL_IMAGE_NAME := $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
-TEST_IMAGE_NAME := $(IMAGE_REPO)/$(IMAGE_NAME):test
 
 .PHONY: ingest
 ingest:
@@ -15,21 +9,7 @@ ingest:
 
 .PHONY: start
 start:
-	docker compose up --remove-orphans --build
-
-.PHONY: test-image
-test-image:
-	docker build -t ${TEST_IMAGE_NAME} .
-	docker run -it --rm -p 9000  \
-	-e OPENAI_API_KEY="${OPENAI_API_KEY}" \
-	-e PINECONE_API_KEY="${PINECONE_API_KEY}" \
-	-e PINECONE_ENV="${PINECONE_ENV}" \
-	-v $(shell pwd)/src/settings.py:/app/settings.py \
-	${TEST_IMAGE_NAME}
-
-.PHONY: push-image
-push-image:
-	docker buildx build --platform linux/amd64,linux/arm64 -t ${FINAL_IMAGE_NAME} . --push
+	docker compose up --remove-orphans --rm
 
 define setup_env
 	$(eval ENV_FILE := $(1))
