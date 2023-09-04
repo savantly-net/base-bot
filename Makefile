@@ -3,6 +3,7 @@ IMAGE_NAME ?= base-bot
 IMAGE_TAG ?= latest
 
 VERSION := $(shell cat VERSION)
+TAGGED_VERSION := v$(VERSION)
 NEXT_VERSION := $(shell echo $(VERSION) | awk -F. '{$$NF = $$NF + 1;} 1' | sed 's/ /./g')
 
 GIT_COMMIT := $(shell git rev-parse --short HEAD)
@@ -54,7 +55,7 @@ update-chart-yaml-with-next-version:
 	@echo "Updating Chart.yaml with version $(VERSION)"
 	sed "s/version:.*/version: $(VERSION)/" ./helm/base-bot/Chart.yaml > ./helm/base-bot/Chart.yaml.tmp
 	mv ./helm/base-bot/Chart.yaml.tmp ./helm/base-bot/Chart.yaml
-	sed "s/appVersion:.*/appVersion: $(VERSION)/" ./helm/base-bot/Chart.yaml > ./helm/base-bot/Chart.yaml.tmp
+	sed "s/appVersion:.*/appVersion: $(TAGGED_VERSION)/" ./helm/base-bot/Chart.yaml > ./helm/base-bot/Chart.yaml.tmp
 	mv ./helm/base-bot/Chart.yaml.tmp ./helm/base-bot/Chart.yaml
 	git add helm/base-bot/Chart.yaml
 
@@ -65,7 +66,7 @@ release: ensure-git-repo-pristine docs bump-version update-chart-yaml-with-next-
 	@echo "Version: $(VERSION)"
 	@echo "Commit: $(GIT_COMMIT)"
 	@echo "Image Tag: $(IMAGE_TAG)"
-	git tag -a $(VERSION) -m "Release $(VERSION)"
-	git push origin $(VERSION)
-	@echo "Tag $(VERSION) created and pushed to origin"
+	git tag -a $(TAGGED_VERSION) -m "Release $(VERSION)"
+	git push origin $(TAGGED_VERSION)
+	@echo "Tag $(TAGGED_VERSION) created and pushed to origin"
 	git commit -m "Released $(VERSION) and prepared for $(NEXT_VERSION)"
