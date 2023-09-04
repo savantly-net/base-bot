@@ -52,8 +52,10 @@ bump-version:
 .PHONY: update-chart-yaml-with-version
 update-chart-yaml-with-next-version:
 	@echo "Updating Chart.yaml with version $(VERSION)"
-	sed "s/version:.*/version: $(VERSION)/" ./helm/base-bot/Chart.yaml
-	sed "s/appVersion:.*/appVersion: $(VERSION)/" ./helm/base-bot/Chart.yaml
+	sed "s/version:.*/version: $(VERSION)/" ./helm/base-bot/Chart.yaml > ./helm/base-bot/Chart.yaml.tmp
+	mv ./helm/base-bot/Chart.yaml.tmp ./helm/base-bot/Chart.yaml
+	sed "s/appVersion:.*/appVersion: $(VERSION)/" ./helm/base-bot/Chart.yaml > ./helm/base-bot/Chart.yaml.tmp
+	mv ./helm/base-bot/Chart.yaml.tmp ./helm/base-bot/Chart.yaml
 	git add helm/base-bot/Chart.yaml
 
 
