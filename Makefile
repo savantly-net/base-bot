@@ -37,6 +37,7 @@ test-image:
 docs:
 	@echo "Generating docs"
 	docker run --rm --volume "$(PROJECT_DIR)/helm:/helm-docs:rw" jnorwood/helm-docs:latest
+	git add helm/base-bot/README.md
 
 .PHONY: ensure-git-repo-pristine
 ensure-git-repo-pristine:
