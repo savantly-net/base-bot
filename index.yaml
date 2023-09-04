@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   base-bot:
   - apiVersion: v2
+    appVersion: 0.1.10
+    created: "2023-09-04T03:49:13.941167118Z"
+    description: A Helm chart for Kubernetes
+    digest: e9da692c0d7d875405e2402d9599a82a2b30ca1fb064f795e0957e30e03ec3db
+    name: base-bot
+    type: application
+    urls:
+    - https://github.com/savantly-net/base-bot/releases/download/base-bot-0.1.10/base-bot-0.1.10.tgz
+    version: 0.1.10
+  - apiVersion: v2
     appVersion: 0.1.9
     created: "2023-09-04T03:16:51.081643515Z"
     description: A Helm chart for Kubernetes
@@ -61,4 +71,4 @@ entries:
     urls:
     - https://github.com/savantly-net/base-bot/releases/download/base-bot-0.1.2/base-bot-0.1.2.tgz
     version: 0.1.2
-generated: "2023-09-04T03:16:51.081661215Z"
+generated: "2023-09-04T03:49:13.941192719Z"
