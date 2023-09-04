@@ -3,7 +3,7 @@ IMAGE_NAME ?= base-bot
 IMAGE_TAG ?= latest
 
 VERSION := $(shell cat VERSION)
-TAGGED_VERSION := v$(VERSION)
+TAGGED_VERSION := $(VERSION)
 NEXT_VERSION := $(shell echo $(VERSION) | awk -F. '{$$NF = $$NF + 1;} 1' | sed 's/ /./g')
 
 GIT_COMMIT := $(shell git rev-parse --short HEAD)
