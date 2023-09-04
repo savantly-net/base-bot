@@ -50,10 +50,10 @@ release: ensure-git-repo-pristine docs bump-version update-chart-yaml-with-next-
 	@echo "Image Tag: $(IMAGE_TAG)"
 	git tag -a $(VERSION) -m "Release $(VERSION)"
 	git push origin $(VERSION)
-	@echo "Release $(VERSION) created"
+	@echo "Tag $(VERSION) created and pushed to origin"
 	@echo $(NEXT_VERSION) > VERSION
 	git add VERSION
-	git commit -m "Bump version to $(NEXT_VERSION)"
+	git commit -m "Bumped version to $(NEXT_VERSION)"
 
 .PHONY: bump-version
 bump-version:
@@ -62,9 +62,9 @@ bump-version:
 	git add VERSION
 
 
-.PHONY: update-chart-yaml-with-next-version
+.PHONY: update-chart-yaml-with-version
 update-chart-yaml-with-next-version:
-	@echo "Updating Chart.yaml with version $(NEXT_VERSION)"
-	sed -i "s/version:.*/version: $(NEXT_VERSION)/" helm/base-bot/Chart.yaml
-	sed -i "s/appVersion:.*/appVersion: $(NEXT_VERSION)/" helm/base-bot/Chart.yaml
+	@echo "Updating Chart.yaml with version $(VERSION)"
+	sed -i "s/version:.*/version: $(VERSION)/" helm/base-bot/Chart.yaml
+	sed -i "s/appVersion:.*/appVersion: $(VERSION)/" helm/base-bot/Chart.yaml
 	git add helm/base-bot/Chart.yaml
