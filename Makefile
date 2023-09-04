@@ -65,6 +65,6 @@ bump-version:
 .PHONY: update-chart-yaml-with-version
 update-chart-yaml-with-next-version:
 	@echo "Updating Chart.yaml with version $(VERSION)"
-	sed -i "s/version:.*/version: $(VERSION)/" helm/base-bot/Chart.yaml
-	sed -i "s/appVersion:.*/appVersion: $(VERSION)/" helm/base-bot/Chart.yaml
+	sed -i "s/version:.*/version: $$VERSION/" helm/base-bot/Chart.yaml
+	sed -i "s/appVersion:.*/appVersion: $$VERSION/" helm/base-bot/Chart.yaml
 	git add helm/base-bot/Chart.yaml
