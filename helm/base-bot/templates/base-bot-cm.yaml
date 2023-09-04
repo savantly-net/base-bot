@@ -7,4 +7,10 @@ metadata:
     {{- include "base-bot.labels" . | nindent 4 }}
 data:
   settings.py: |
-  {{- toYaml .Values.chat_settings | nindent 4 }}
+    REPHRASE_PROMPT = """
+    {{- .Values.chat_settings.rephrase_prompt | nindent 4 }}
+    """
+    QA_PROMPT = """
+    {{- .Values.chat_settings.qa_prompt | nindent 4 }}
+    """
+    {{- toYaml .Values.chat_settings.additional | nindent 4 }}
