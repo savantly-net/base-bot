@@ -1,9 +1,6 @@
 services:
   my-gpt:
-    image: my-gpt
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: savantly/base-bot:latest
     ports:
       - 9000:9000
     environment:
@@ -12,9 +9,9 @@ services:
       PINECONE_INDEX_NAME: "my-demo"
       PINECONE_ENV: ${PINECONE_ENV}
       SAVANTLY_CHAT_VECTORSTORE_CREATE_IF_MISSING: "False"
+#     SAVANTLY_CHAT_<other-settting>: "value"
     volumes:
       - ./data/docs:/app/data/docs
-      - ./src/vectorstore.py:/app/base_bot/vectorstore.py
       - ./src/settings.py:/app/settings.py
       - ./data/stores:/app/data/stores
 
