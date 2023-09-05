@@ -60,7 +60,6 @@ def ingest_docs(document_loader):
     p = Pinecone.from_existing_index(PINECONE_INDEX_NAME, embeddings)
     p.add_documents(documents)
 
-    #Pinecone.from_documents(documents, embeddings, index_name=PINECONE_INDEX_NAME)
     print("Done!")
 
 

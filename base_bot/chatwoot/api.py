@@ -12,36 +12,36 @@ from .webhook_payload import Root as ChatwootWebhookPayload
 router = APIRouter()
 
 
-def send_to_chatwoot(account, conversation, message: str):
+def send_to_chatwoot(account_id: str, conversation_id: str, message: str):
     data = {"content": message}
-    url = f"{cfg.CHATWOOT_URL}/api/v1/accounts/{account}/conversations/{conversation}/messages"
+    url = f"{cfg.CHATWOOT_URL}/api/v1/accounts/{account_id}/conversations/{conversation_id}/messages"
     headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
+        "Content-Type": "application/json; charset=utf-8",
+        "Accept": "application/json; charset=utf-8",
         "api_access_token": f"{cfg.CHATWOOT_BOT_TOKEN}",
     }
 
-    r = requests.post(url, json=data, headers=headers)
+    r = requests.post(url=url, json=data, headers=headers)
     return r.json()
 
 
-@router.post("/bot")  # type: ignore
-async def bot(payload: ChatwootWebhookPayload):
+@router.post("/bot/{chat_variant:str}")  # type: ignore
+async def bot(payload: ChatwootWebhookPayload, chat_variant: str = ""):
     chatwoot_msg = "None"
     conversation = payload.conversation.display_id
     account = payload.account.id
 
     if payload.message_type == "incoming":
-        ai_msg = await inference(payload)  # type: ignore
-        chatwoot_msg = send_to_chatwoot(account, conversation, ai_msg)
+        ai_msg = await inference(payload, chat_variant)  # type: ignore
+        chatwoot_msg = send_to_chatwoot(account_id=account, conversation_id=conversation, message=ai_msg)
 
     return chatwoot_msg
 
 
-async def inference(payload: ChatwootWebhookPayload):
+async def inference(payload: ChatwootWebhookPayload, chat_variant: str):
     callback_handler = BaseCallbackHandler()
     chat_history = []
-    vstore = get_vectorstore(cfg.CHATWOOT_BOT_VARIANT)
+    vstore = get_vectorstore(chat_variant)
     qa_chain = get_chain(vstore, callback_handler, callback_handler)
 
     # Receive and send back the client message

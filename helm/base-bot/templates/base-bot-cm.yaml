@@ -8,9 +8,9 @@ metadata:
 data:
   settings.py: |
     REPHRASE_PROMPT = """
-    {{- .Values.chat_settings.rephrase_prompt | nindent 4 }}
+    {{ .Values.chat_settings.rephrase_prompt | nindent 4 }}
     """
     QA_PROMPT = """
-    {{- .Values.chat_settings.qa_prompt | nindent 4 }}
+    {{ .Values.chat_settings.qa_prompt | nindent 4 }}
     """
-    {{- toYaml .Values.chat_settings.additional | nindent 4 }}
+    {{ .Values.chat_settings.additional | nindent 4 }}

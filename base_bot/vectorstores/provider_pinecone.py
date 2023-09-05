@@ -1,10 +1,11 @@
 import logging
 import os
-from typing import Optional
 
 import pinecone
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Pinecone, VectorStore
+
+from base_bot.vectorstores.provider import VectorStoreProvider
 
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_ENV = os.getenv("PINECONE_ENV")
@@ -24,21 +25,34 @@ pinecone.init(
     environment=PINECONE_ENV,  # next to api key in console
 )
 
-vectorstore: Optional[VectorStore] = None
+vectorstores = {
+    "default": None,
+}
 
 
-def _load_vectorstore() -> VectorStore:
+class DefaultVectorStore(VectorStoreProvider):
+    def __init__(self):
+        # Initialize your VectorStore here
+        pass
+
+    def get_vectorstore(self, variant: str = ""):
+        if variant == "":
+            variant = "default"
+        logging.info(f"getting vectorstore for variant {variant}")
+        if vectorstores.get(variant) is None:
+            logging.info("loading vectorstore...")
+            vectorstores.update({variant: _load_vectorstore(variant)})
+        return vectorstores.get(variant)
+
+
+def _load_vectorstore(variant: str) -> VectorStore:
     logging.info("loading pinecone vectorstore...")
-    logging.info("checking pinecone connection...")
     pinecone.list_indexes()
+
+    logging.info(f"variant: {variant}")
     logging.info("pinecone connection ok")
 
     embeddings = OpenAIEmbeddings()
-    return Pinecone.from_existing_index(PINECONE_INDEX_NAME, embeddings)
-
-
-def get_vectorstore() -> VectorStore:
-    global vectorstore
-    if vectorstore is None:
-        vectorstore = _load_vectorstore()
-    return vectorstore
+    return Pinecone.from_existing_index(
+        PINECONE_INDEX_NAME, embeddings, namespace=variant
+    )

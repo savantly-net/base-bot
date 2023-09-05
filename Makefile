@@ -3,7 +3,7 @@ IMAGE_NAME ?= base-bot
 IMAGE_TAG ?= latest
 
 VERSION := $(shell cat VERSION)
-TAGGED_VERSION := v$(VERSION)
+TAGGED_VERSION := $(VERSION)
 NEXT_VERSION := $(shell echo $(VERSION) | awk -F. '{$$NF = $$NF + 1;} 1' | sed 's/ /./g')
 
 GIT_COMMIT := $(shell git rev-parse --short HEAD)
@@ -13,6 +13,10 @@ FINAL_IMAGE_NAME := $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
 TEST_IMAGE_NAME := $(IMAGE_REPO)/$(IMAGE_NAME):test
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
+.PHONY: requirements
+requirements:
+	pip install -r requirements.txt
 
 .PHONY: start
 start:

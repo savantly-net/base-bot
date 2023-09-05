@@ -136,7 +136,7 @@ The webhook URL for Base-Bot is `/chatwoot/bot`
 - [x] Enable loading docs from a folder
 - [x] Create Docker image
 - [x] Create docker-compose for rapid testing
-- [ ] Create parameters and code to substitute the pickled vector store for Pinecone or another implementation
+- [x] Create parameters and code to substitute the pickled vector store for Pinecone or another implementation
 - [x] Create Helm chart
 - [ ] Create web-component for dropping the chat on any web page 
 - [ ] Parameterize additional chain settings??
