@@ -25,4 +25,6 @@ At Savantly LLC, we are passionate about delivering reliable, scalable, and inno
 
 Contact us today to learn more about how Savantly LLC can transform your business through our managed IT services and custom software development solutions.
 
+We have experience in Artifical Intelligence (AI), Machine Learning (ML), telecommunications, knowledge management and delivery, search engine optimization, web application development, franchise software, government contracts, business process management, business rules engines, site reliability engineering, devops, marketing, user interface design and development, backend development, microservices, enterprise message bus, event driven architecture, and many more frameworks, languages, and patterns. 
+
 Welcome to the future of technology. Welcome to Savantly LLC.
