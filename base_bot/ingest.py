@@ -6,7 +6,7 @@ from langchain.vectorstores.faiss import FAISS
 
 
 INGEST_CHUNK_SIZE = 1000
-INGEST_CHUNK_OVERLAP = 200
+INGEST_CHUNK_OVERLAP = 100
 VECTORSTORE_PATH = "data/stores/vectorstore.pkl"
 
 

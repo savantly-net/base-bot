@@ -14,6 +14,8 @@ TEST_IMAGE_NAME := $(IMAGE_REPO)/$(IMAGE_NAME):test
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
+-include .env
+
 .PHONY: requirements
 requirements:
 	pip install -r requirements.txt
@@ -75,3 +77,17 @@ release: ensure-git-repo-pristine docs bump-version update-chart-yaml-with-next-
 	git push origin $(TAGGED_VERSION)
 	@echo "Tag $(TAGGED_VERSION) created and pushed to origin"
 	git commit -m "Released $(VERSION) and prepared for $(NEXT_VERSION)"
+
+.PHONY: pinecone-ingest
+pinecone-ingest:
+	$(call setup_env, .env)
+	which python3
+	python3 -m base_bot.utils.pinecone_ingest
+
+
+define setup_env
+	$(eval ENV_FILE := $(1))
+	@echo " - setup env $(ENV_FILE)"
+	$(eval include $(1))
+	$(eval export)
+endef
