@@ -10,7 +10,7 @@ router = APIRouter()
 
 @router.get("/")
 @router.get("/{chat_variant:str}")
-async def get(request: Request, chat_variant: str = ""):
+async def get(request: Request, chat_variant: str = config.VECTORSTORE_DEFAULT_VARIANT):
     return templates.TemplateResponse("index.html.j2", {"request": request, "ui": ui, "chat_variant": chat_variant})
 
 
