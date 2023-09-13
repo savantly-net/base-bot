@@ -26,6 +26,7 @@ Helpful Answer:
 VECTORSTORE_CREATE_IF_MISSING = True
 VECTORSTORE_PATH = f"{PROJECT_DIRECTORY}/data/stores/vectorstore.pkl"
 VECTORSTORE_VARIANTS = []
+VECTORSTORE_DEFAULT_VARIANT = ""
 VECTORSTORE_PACKAGE = "base_bot.vectorstores.provider_default"
 VECTORSTORE_IMPLEMENTATION = "DefaultVectorStore"
 

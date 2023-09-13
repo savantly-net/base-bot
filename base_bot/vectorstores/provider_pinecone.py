@@ -6,10 +6,12 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Pinecone, VectorStore
 
 from base_bot.vectorstores.provider import VectorStoreProvider
+from base_bot import config
 
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_ENV = os.getenv("PINECONE_ENV")
 PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
+default_variant = config.VECTORSTORE_DEFAULT_VARIANT
 
 # check if params are set
 if PINECONE_INDEX_NAME is None:
@@ -35,7 +37,7 @@ class DefaultVectorStore(VectorStoreProvider):
         # Initialize your VectorStore here
         pass
 
-    def get_vectorstore(self, variant: str = ""):
+    def get_vectorstore(self, variant: str = default_variant):
         if variant == "":
             variant = "default"
         logging.info(f"getting vectorstore for variant {variant}")

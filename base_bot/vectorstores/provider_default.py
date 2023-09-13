@@ -13,13 +13,14 @@ from base_bot.ingest import ingest_docs
 
 vectorstore: Optional[VectorStore] = None
 vectorstore_variants = config.VECTORSTORE_VARIANTS
+default_variant = config.VECTORSTORE_DEFAULT_VARIANT
 
 class DefaultVectorStore(VectorStoreProvider):
     def __init__(self):
         # Initialize your VectorStore here
         pass
 
-    def get_vectorstore(self, variant: str = ""):
+    def get_vectorstore(self, variant: str = default_variant):
         global vectorstore
         if vectorstore is None:
             vectorstore = _load_vectorstore(variant)
