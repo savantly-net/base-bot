@@ -6,11 +6,12 @@ from .ui import ui
 
 templates = Jinja2Templates(directory=config.TEMPLATES_DIR)
 router = APIRouter()
-default_variant = config.VECTORSTORE_DEFAULT_VARIANT
 
 @router.get("/")
 @router.get("/{chat_variant:str}")
-async def get(request: Request, chat_variant: str = default_variant):
+async def get(request: Request, chat_variant: str = ""):
+    if chat_variant == "":
+        chat_variant = config.VECTORSTORE_DEFAULT_VARIANT
     return templates.TemplateResponse("index.html.j2", {"request": request, "ui": ui, "chat_variant": chat_variant})
 
 
