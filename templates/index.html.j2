@@ -6,9 +6,39 @@
     <meta name="description" content="{{ ui.page_description }}" />
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
     <style>
+
+        html {
+            height: 100vh;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
         .chat-body {
-            width: 550px;
             margin: 25px auto;
+        }
+        /* Small devices (portrait tablets and large phones, 600px and up) */
+        @media only screen and (min-width: 600px) {
+            .chat-body {
+                width: 590px;
+            }
+        }
+
+        /* Medium devices (landscape tablets, 768px and up) */
+        @media only screen and (min-width: 768px) {
+            .chat-body {
+                width: 700px;
+            }
+        }
+
+        /* Large devices (laptops/desktops, 992px and up) */
+        @media only screen and (min-width: 992px) {
+            .chat-body {
+                width: 900px;
+            }
         }
         .card-body {
             background-color: #333;
@@ -18,13 +48,13 @@
         .server-message {
             background-color: #444;
             padding: 10px;
-            margin: 10px;
+            margin: 10px 0;
             border-radius: 10px;
         }
         .client-message {
             background-color: #555;
             padding: 10px;
-            margin: 10px;
+            margin: 10px 0;
             border-radius: 10px;
         }
         .form-inline {
@@ -39,6 +69,9 @@
             border-radius: 5px;
             padding: 10px;
             margin-right: 10px;
+        }
+        #messages {
+            max-height: calc(100vh - 300px);
         }
         #send {
             background-color: #005673;
@@ -175,7 +208,7 @@
         <div class="card-body p-5">
             <p class="card-text text-center text-sm" id="header"> Ask a question </p>
             <hr class="border-gray-500 mb-5" style="margin-top: 20px;">
-            <div id="messages" class="overflow-auto" style="max-height: 500px;">
+            <div id="messages" class="overflow-auto">
             </div>
             <form action="" class="form-inline mt-5" id="chat-form" onsubmit="sendMessage(event)">
                 <input type="text" class="form-control" placeholder="Write your question" id="messageText">
