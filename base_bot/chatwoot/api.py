@@ -1,11 +1,14 @@
+import json
 import logging
 
-import base_bot.config as cfg
 import requests
-from base_bot.query_data import get_chain
-from base_bot.vectorstore import get_vectorstore
 from fastapi import APIRouter
 from langchain.callbacks.base import BaseCallbackHandler
+from pydantic import BaseModel
+
+import base_bot.config as cfg
+from base_bot.query_data import get_chain
+from base_bot.vectorstore import get_vectorstore
 
 from .webhook_payload import Root as ChatwootWebhookPayload
 
@@ -25,14 +28,15 @@ def send_to_chatwoot(account_id: str, conversation_id: str, message: str):
     return r.json()
 
 
-@router.post("/bot/{chat_variant:str}")  # type: ignore
+@router.post("/bot/{chat_variant:str}")
 async def bot(payload: ChatwootWebhookPayload, chat_variant: str = ""):
+    logging.info(f"received payload: {payload}")
     chatwoot_msg = "None"
-    conversation = payload.conversation.display_id
+    conversation = payload.conversation.id
     account = payload.account.id
 
     if payload.message_type == "incoming":
-        ai_msg = await inference(payload, chat_variant)  # type: ignore
+        ai_msg = await inference(payload, chat_variant)
         chatwoot_msg = send_to_chatwoot(account_id=account, conversation_id=conversation, message=ai_msg)
 
     return chatwoot_msg
