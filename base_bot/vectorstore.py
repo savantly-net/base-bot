@@ -9,6 +9,7 @@ from . import config
 
 mod_package = config.VECTORSTORE_PACKAGE
 mod_class = config.VECTORSTORE_IMPLEMENTATION
+default_variant = config.VECTORSTORE_DEFAULT_VARIANT
 
 
 # Dynamically import the selected implementation
@@ -26,6 +27,6 @@ except ImportError as err:
 vector_store_provider: VectorStoreProvider = VectorStoreImplementation()
 
 
-def get_vectorstore(variant="") -> VectorStore:
+def get_vectorstore(variant=default_variant) -> VectorStore:
     global vector_store_provider
     return vector_store_provider.get_vectorstore(variant)
