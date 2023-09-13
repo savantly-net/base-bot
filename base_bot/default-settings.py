@@ -2,6 +2,9 @@ import os
 
 PROJECT_DIRECTORY = f"{os.path.dirname(os.path.realpath(__file__))}/.."
 
+# read the version from the VERSION file
+VERSION = open(f"{PROJECT_DIRECTORY}/VERSION").read().strip()
+
 DOCS_PATH = f"{PROJECT_DIRECTORY}/data/docs"
 
 

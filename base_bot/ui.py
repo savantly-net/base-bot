@@ -11,5 +11,6 @@ class UIContext:
     header_logo_alt = config.UI_HEADER_LOGO_ALT
     header_logo_href = config.UI_HEADER_LOGO_HREF
     chat_bot_name = config.UI_CHAT_BOT_NAME
+    version = config.VERSION
 
 ui = UIContext()

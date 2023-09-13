@@ -184,4 +184,20 @@
         </div>
     </div>
 </body>
+<script id="webvitals">
+(function () {
+    var script = document.createElement('script');
+    script.onload = () => {
+    window.GrafanaFaroWebSdk.initializeFaro({
+        url: 'https://grafana-agent.savantly.apps.savantly.cloud/collect',
+        app: {
+        name: 'base-bot',
+        version: '{{ ui.version }}',
+        },
+    });
+    };
+    script.src = 'https://cdn.jsdelivr.net/npm/@grafana/faro-web-sdk@1.1.4/dist/bundle/faro-web-sdk.iife.min.js';
+    document.head.appendChild(script);
+})();
+</script>
 </html>

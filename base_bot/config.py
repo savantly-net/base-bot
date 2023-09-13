@@ -14,6 +14,8 @@ settings = Dynaconf(
 # Provide strongly-typed access to settings.
 # See https://www.dynaconf.com/ for more information.
 
+VERSION = settings.VERSION
+
 DOCS_PATH = settings.DOCS_PATH
 
 REPHRASE_PROMPT = settings.REPHRASE_PROMPT
