@@ -1,116 +1,108 @@
-from typing import Any
-from dataclasses import dataclass
-import json
+from typing import Optional
+from pydantic import BaseModel
 
-@dataclass
-class Account:
+class Account(BaseModel):
     id: str
     name: str
 
-    @staticmethod
-    def from_dict(obj: Any) -> 'Account':
-        _id = str(obj.get("id"))
-        _name = str(obj.get("name"))
-        return Account(_id, _name)
+    @classmethod
+    def from_dict(cls, obj):
+        return cls(id=str(obj.get("id")), name=str(obj.get("name")))
 
 
-@dataclass
-class Browser:
+class Browser(BaseModel):
     device_name: str
     browser_name: str
     platform_name: str
     browser_version: str
     platform_version: str
 
-    @staticmethod
-    def from_dict(obj: Any) -> 'Browser':
-        _device_name = str(obj.get("device_name"))
-        _browser_name = str(obj.get("browser_name"))
-        _platform_name = str(obj.get("platform_name"))
-        _browser_version = str(obj.get("browser_version"))
-        _platform_version = str(obj.get("platform_version"))
-        return Browser(_device_name, _browser_name, _platform_name, _browser_version, _platform_version)
+    @classmethod
+    def from_dict(cls, obj):
+        return cls(
+            device_name=str(obj.get("device_name")),
+            browser_name=str(obj.get("browser_name")),
+            platform_name=str(obj.get("platform_name")),
+            browser_version=str(obj.get("browser_version")),
+            platform_version=str(obj.get("platform_version")),
+        )
 
 
-@dataclass
-class AdditionalAttributes:
+class AdditionalAttributes(BaseModel):
     browser: Browser
     referer: str
-    initiated_at: str
+    initiated_at: Optional[object] = None
 
-    @staticmethod
-    def from_dict(obj: Any) -> 'AdditionalAttributes':
-        _browser = Browser.from_dict(obj.get("browser"))
-        _referer = str(obj.get("referer"))
-        _initiated_at = str(obj.get("initiated_at"))
-        return AdditionalAttributes(_browser, _referer, _initiated_at)
+    @classmethod
+    def from_dict(cls, obj):
+        return cls(
+            browser=Browser.from_dict(obj.get("browser")),
+            referer=str(obj.get("referer")),
+            initiated_at=str(obj.get("initiated_at")),
+        )
 
-@dataclass
-class Contact:
+
+class Contact(BaseModel):
     id: str
     name: str
 
-    @staticmethod
-    def from_dict(obj: Any) -> 'Contact':
-        _id = str(obj.get("id"))
-        _name = str(obj.get("name"))
-        return Contact(_id, _name)
-
-@dataclass
-class Conversation:
-    display_id: str
-    additional_attributes: AdditionalAttributes
-
-    @staticmethod
-    def from_dict(obj: Any) -> 'Conversation':
-        _display_id = str(obj.get("display_id"))
-        _additional_attributes = AdditionalAttributes.from_dict(obj.get("additional_attributes"))
-        return Conversation(_display_id, _additional_attributes)
+    @classmethod
+    def from_dict(cls, obj):
+        return cls(id=str(obj.get("id")), name=str(obj.get("name")))
 
 
-@dataclass
-class Sender:
+class Conversation(BaseModel):
+    id: str
+    display_id: Optional[str] = None
+    additional_attributes: Optional[AdditionalAttributes] = None
+
+    @classmethod
+    def from_dict(cls, obj):
+        return cls(
+            display_id=str(obj.get("display_id")),
+            additional_attributes=AdditionalAttributes.from_dict(obj.get("additional_attributes")),
+        )
+
+
+class Sender(BaseModel):
     id: str
     name: str
-    email: str
+    email: Optional[str] = None
 
-    @staticmethod
-    def from_dict(obj: Any) -> 'Sender':
-        _id = str(obj.get("id"))
-        _name = str(obj.get("name"))
-        _email = str(obj.get("email"))
-        return Sender(_id, _name, _email)
+    @classmethod
+    def from_dict(cls, obj):
+        return cls(
+            id=str(obj.get("id")),
+            name=str(obj.get("name")),
+            email=str(obj.get("email")),
+        )
 
-@dataclass
-class Root:
+
+class Root(BaseModel):
     event: str
     id: str
     content: str
     created_at: str
     message_type: str
     content_type: str
-    source_id: str
+    source_id: Optional[str] = None
     sender: Sender
-    contact: Contact
+    contact: Optional[Contact] = None
     conversation: Conversation
     account: Account
 
-    @staticmethod
-    def from_dict(obj: Any) -> 'Root':
-        _event = str(obj.get("event"))
-        _id = str(obj.get("id"))
-        _content = str(obj.get("content"))
-        _created_at = str(obj.get("created_at"))
-        _message_type = str(obj.get("message_type"))
-        _content_type = str(obj.get("content_type"))
-        _source_id = str(obj.get("source_id"))
-        _sender = Sender.from_dict(obj.get("sender"))
-        _contact = Contact.from_dict(obj.get("contact"))
-        _conversation = Conversation.from_dict(obj.get("conversation"))
-        _account = Account.from_dict(obj.get("account"))
-        return Root(_event, _id, _content, _created_at, _message_type, _content_type, _source_id, _sender, _contact, _conversation, _account)
-
-
-# Example Usage
-# jsonstring = json.loads(myjsonstring)
-# root = Root.from_dict(jsonstring)
+    @classmethod
+    def from_dict(cls, obj):
+        return cls(
+            event=str(obj.get("event")),
+            id=str(obj.get("id")),
+            content=str(obj.get("content")),
+            created_at=str(obj.get("created_at")),
+            message_type=str(obj.get("message_type")),
+            content_type=str(obj.get("content_type")),
+            source_id=str(obj.get("source_id")),
+            sender=Sender.from_dict(obj.get("sender")),
+            contact=Contact.from_dict(obj.get("contact")),
+            conversation=Conversation.from_dict(obj.get("conversation")),
+            account=Account.from_dict(obj.get("account")),
+        )
