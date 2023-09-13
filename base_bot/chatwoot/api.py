@@ -1,10 +1,8 @@
-import json
 import logging
 
 import requests
 from fastapi import APIRouter
 from langchain.callbacks.base import BaseCallbackHandler
-from pydantic import BaseModel
 
 import base_bot.config as cfg
 from base_bot.query_data import get_chain
