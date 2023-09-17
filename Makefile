@@ -18,10 +18,14 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 .PHONY: requirements
 requirements:
+# use virtual env
+	python3 -m venv .venv
+	source .venv/bin/activate && \
 	pip install -r requirements.txt
 
 .PHONY: start
 start:
+	source .venv/bin/activate && \
 	uvicorn base_bot.main:app --reload --port 9000
 
 .PHONY: format
