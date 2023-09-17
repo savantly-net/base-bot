@@ -72,6 +72,17 @@ UI_HEADER_LOGO_SRC = "https://savantly.net/img/logo.png"
 UI_HEADER_LOGO_ALT = "Savantly Logo"
 UI_HEADER_LOGO_HREF = "https://savantly.net"
 UI_CHAT_BOT_NAME = "BaseBot"
+UI_SHOW_DISCLAIMER = True
+UI_DISCLAIMER_TEXT = """
+This is for entertainment purposes only.  
+The information provided by this chatbot is not a substitute for professional advice.  
+If you have a medical emergency, call your doctor or 911 immediately.  
+Do not rely on this chatbot for assistance in regard to your medical needs.  
+This chatbot is not designed to diagnose, treat, cure or prevent any disease.  
+If you have any concerns or questions about your health, you should always consult with a physician or other health-care professional.  
+Do not disregard, avoid or delay obtaining medical or health related advice from your health-care professional because of something you may have read on this chatbot.  
+The use of any information provided by this chatbot is solely at your own risk.  
+"""
 
 
 # Chatwoot

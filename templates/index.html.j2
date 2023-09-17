@@ -216,6 +216,13 @@
             </form>
         </div>
     </div>
+    {% if ui.show_disclaimer %}
+    <div class="disclaimer">
+        <p class="text-center text-sm text-gray-500">
+            {{ ui.disclaimer_text }}
+        </p>
+    </div>
+    {% endif %}
 </body>
 <script id="webvitals">
 (function () {
