@@ -28,16 +28,21 @@ pinecone.init(
 
 
 INGEST_CHUNK_SIZE = 1000
-INGEST_CHUNK_OVERLAP = 0
+INGEST_CHUNK_OVERLAP = 100
 
 
-def ingest_docs(document_loader, namespace="default"):
+def ingest_docs(document_loader, namespace="default", clearExisting=False):
     """Ingest documents into Pinecone."""
     # check pinecone client is connected
     print("Checking Pinecone connection...")
     pinecone.list_indexes()
     
     documents = document_loader.load()
+
+    if clearExisting:
+        print(f"Clearing existing namespace {namespace} in index {PINECONE_INDEX_NAME}")
+        index = pinecone.Index(index_name=PINECONE_INDEX_NAME)
+        index.delete(namespace=namespace, delete_all=True)
 
     print("Loaded {} documents".format(len(documents)))
 
@@ -47,9 +52,10 @@ def ingest_docs(document_loader, namespace="default"):
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
+        separators=["\n\n\n", "\n\n", "\n", "\r", " ", "\t", "."],
     )
     print(
-        "Splitting documents into chunks. Chunk size: {}, overlap: {}".format(
+        "Splitting documents into chunks. Chunk size: {}, with overlap: {}".format(
             chunk_size, chunk_overlap
         )
     )
@@ -72,9 +78,18 @@ def ingest_docs(document_loader, namespace="default"):
 if __name__ == "__main__":
     from ..document_loader import get_document_loader
     variant = input("Enter variant name (base-bot): ")
+
     if variant == "":
         variant = "base-bot"
-    docs_path = f"data/docs/private/{variant}"
+    print(f"Using variant {variant}")
+
+    docs_path = input(f"Enter path to documents (data/docs/private/{variant}): ")
+    if docs_path == "":
+        docs_path = f"data/docs/private/{variant}"
     print(f"Loading documents from {docs_path}")
+
+    clearExisting = input("Clear existing namespace in the index? (y/n): ")
+    if clearExisting == "y":
+        clearExisting = True
     input("Press enter to start ingesting documents...")
-    ingest_docs(document_loader=get_document_loader(docs_path=docs_path), namespace=variant)
+    ingest_docs(document_loader=get_document_loader(docs_path=docs_path), namespace=variant, clearExisting=clearExisting)
